@@ -1,16 +1,16 @@
 <?php
 /**
- * Create WordPress Plugin Tests: Base Test Class
+ * Swagger API Documentation Generator Tests: Base Test Class
  *
- * @package create-wordpress-plugin
+ * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Create_WordPress_Plugin\Tests;
+namespace Alley\WP\Swagger_Generator\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
 
 /**
- * Create WordPress Plugin Base Test Case
+ * Swagger API Documentation Generator Base Test Case
  */
 abstract class TestCase extends TestkitTest_Case {
 

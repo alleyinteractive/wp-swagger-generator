@@ -2,10 +2,10 @@
 /**
  * The main plugin function
  *
- * @package create-wordpress-plugin
+ * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Create_WordPress_Plugin;
+namespace Alley\WP\Swagger_Generator;
 
 use Alley\WP\Features\Group;
 

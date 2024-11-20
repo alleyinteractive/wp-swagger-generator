@@ -1,17 +1,17 @@
 {
-    "name": "alleyinteractive/create-wordpress-plugin",
-    "description": "A skeleton WordPress plugin",
+    "name": "alleyinteractive/wp-swagger-generator",
+    "description": "Plugin/package to generate Swagger documentation for the WordPress REST API.",
     "type": "wordpress-plugin",
     "keywords": [
         "alleyinteractive",
-        "create-wordpress-plugin"
+        "wp-swagger-generator"
     ],
-    "homepage": "https://github.com/alleyinteractive/create-wordpress-plugin",
+    "homepage": "https://github.com/alleyinteractive/wp-swagger-generator",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "author_name",
-            "email": "email@domain.com"
+            "name": "Sean Fisher",
+            "email": "sean@alley.com"
         }
     ],
     "require": {
@@ -34,13 +34,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Alley\\WP\\Create_WordPress_Plugin\\Tests\\": "tests"
+            "Alley\\WP\\Swagger_Generator\\Tests\\": "tests"
         }
     },
     "extra": {
         "wordpress-autoloader": {
             "autoload": {
-                "Alley\\WP\\Create_WordPress_Plugin\\": "src"
+                "Alley\\WP\\Swagger_Generator\\": "src"
             }
         }
     },

@@ -14,6 +14,6 @@ jobs:
   release:
     name: "Built Branch and Release"
     runs-on: ubuntu-latest
-    if: github.repository != 'alleyinteractive/create-wordpress-plugin'
+    if: github.repository != 'alleyinteractive/wp-swagger-generator'
     steps:
       - uses: alleyinteractive/action-release@develop

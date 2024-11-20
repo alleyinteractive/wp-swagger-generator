@@ -1,11 +1,11 @@
 <?php
 /**
- * Create WordPress Plugin Tests: Example Unit Test
+ * Swagger API Documentation Generator Tests: Example Unit Test
  *
- * @package create-wordpress-plugin
+ * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Create_WordPress_Plugin\Tests\Unit;
+namespace Alley\WP\Swagger_Generator\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 

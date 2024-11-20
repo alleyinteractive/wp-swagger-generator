@@ -1,13 +1,13 @@
 <?php
 /**
- * Create WordPress Plugin Tests: Example Feature Test
+ * Swagger API Documentation Generator Tests: Example Feature Test
  *
- * @package create-wordpress-plugin
+ * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Create_WordPress_Plugin\Tests\Feature;
+namespace Alley\WP\Swagger_Generator\Tests\Feature;
 
-use Alley\WP\Create_WordPress_Plugin\Tests\TestCase;
+use Alley\WP\Swagger_Generator\Tests\TestCase;
 
 /**
  * A test suite for an example feature.
