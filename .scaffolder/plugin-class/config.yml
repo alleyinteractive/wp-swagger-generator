@@ -1,0 +1,10 @@
+name: create-wordpress-plugin@plugin-class
+
+inputs:
+  - name: className
+    description: "Class Name"
+    type: string
+
+files:
+  - source: class.php.hbs
+    destination: src/{{ wpClassFilename inputs.className }}
