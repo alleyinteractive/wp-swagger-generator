@@ -10,6 +10,7 @@ namespace Alley\WP\Swagger_Generator;
 use cebe\openapi\spec\Info;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Operation;
+use cebe\openapi\spec\Parameter;
 use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Paths;
 use Mantle\Support\Traits\Hookable;
@@ -62,7 +63,7 @@ class Generator {
 			 *
 			 * @param string $version OpenAPI version.
 			 */
-			'openapi' => apply_filters( 'wp_swagger_generator_openapi_version', '3.1.0' ),
+			'openapi' => apply_filters( 'wp_swagger_generator_openapi_version', '3.0.3' ),
 			'info'    => $this->get_info(),
 			'paths'   => $this->get_paths(),
 		] );
@@ -121,31 +122,38 @@ class Generator {
 		// dd(rest_get_server()->get_routes());
 
 		foreach ( rest_get_server()->get_routes( $this->namespace ) as $route => $callbacks ) {
+			$route = sanitize_route_for_openapi( $route );
+
+			if ( ! validate_route_for_openapi( $route ) ) {
+				/**
+				 * Filter an invalid route to be included in the OpenAPI document.
+				 *
+				 * @param string|null $route Route.
+				 * @param array       $callbacks Callbacks.
+				 */
+				$route = apply_filters( 'wp_swagger_generator_invalid_route', $route, $callbacks );
+
+				if ( ! $route || ! validate_route_for_openapi( $route ) ) {
+					continue;
+				}
+			}
+
 			$path = new PathItem(
-				apply_filters(
-					'wp_swagger_generator_path_item',
-					[
-						'summary'     => '',
-						'description' =>  '',
-					],
-					$route,
-					$callbacks,
-				),
+				apply_filters( 'wp_swagger_generator_path_item', [], $route, $callbacks ),
 			);
 
 			foreach ( $callbacks as $callback ) {
 				foreach ( array_keys( $callback['methods'] ) as $method ) {
 					$method = strtolower( $method );
 
-					// TODO Permissions.
-
 					$path->{$method} = new Operation(
 						apply_filters(
 							'wp_swagger_generator_operation',
 							[
-								'summary'     => '',
-								'description' => '',
-								'responses'   => [],
+								'parameters' => $this->get_parameters( $route, $callback, $method ),
+								// 'summary'     => '',
+								// 'description' => '',
+								// 'responses'   => [],
 							],
 							$route,
 							$method,
@@ -155,11 +163,80 @@ class Generator {
 				}
 			}
 
-			// TODO: Convert regex arguments to OpenAPI format.
-			$paths[ '/' . rest_get_url_prefix() . $this->convert_route_for_document( $route ) ] = $path;
+			$paths[ '/' . rest_get_url_prefix() . $route ] = $path;
 		}
 
 		return new Paths( $paths );
+	}
+
+	/**
+	 * Get the parameters for the operation.
+	 *
+	 * @param string $route Route.
+	 * @param array  $callback Callback.
+	 * @param string $method Method.
+	 *
+	 * @return Parameter[]
+	 */
+	protected function get_parameters( string $route, array $callback, string $method ): array {
+		$parameters = [];
+
+		if ( empty( $callback['args'] ) ) {
+			return $parameters;
+		}
+
+		$route_parameters = get_route_parameters( $route );
+		$request_parameter_type = 'get' === $method ? 'query' : 'path';
+
+		$parameters = collect( $callback['args'] )->map( function ( array $argument, $argument_name ) use ( $route, $route_parameters, $method ): ?Parameter {
+			$is_route_parameter = in_array( $argument_name, $route_parameters, true );
+			$is_query_parameter = 'get' === $method && ! $is_route_parameter;
+
+			// Force some query parameters to always be a query parameter.
+			if ( in_array( $argument_name, [ 'context', '_embedded', '_fields', '_link' ], true ) ) {
+				$is_query_parameter = true;
+			}
+
+			if ( 'context' === $argument_name ) {
+				return null;
+			}
+
+			/**
+			 * Filter whether an argument for a REST API route is a query parameter.
+			 *
+			 * @param bool   $is_query_parameter Whether the argument is a query parameter.
+			 * @param string $argument           Argument name.
+			 * @param string $route              OpenAPI route.
+			 * @param array  $argument           Route callback argument.
+			 * @param string $method             HTTP method.
+			 */
+			$is_query_parameter = apply_filters( 'wp_swagger_generator_is_query_parameter', $is_query_parameter, $argument_name, $route, $argument, $method );
+
+			// Skip arguments that will be handled in the request body.
+			if ( ! $is_route_parameter && ! $is_query_parameter ) {
+				return null;
+			}
+
+			return new Parameter( filter_out_nulls( [
+				'name'        => $argument_name,
+				'description' => $argument['description'] ?? '',
+				'in'          => $is_route_parameter ? 'path'                                 : 'query',
+				'required'    => $is_route_parameter ? true : ( isset( $argument['required'] ) ? (bool) $argument['required']: false ), // Required can only be true.
+				'schema'      => filter_out_nulls( [
+					'type'    => $argument['type'] ?? 'string',
+					'items'   => $argument['items'] ?? null,
+					'enum'    => $argument['enum'] ?? null,
+					'default' => $argument['default'] ?? null,
+				] ),
+			] ) );
+		} )->filter()->values()->toArray();
+
+		// TODO: Include global parameters for specific REST API routes (_embedded,
+		// _links, etc).
+
+		$parameters = apply_filters( 'wp_swagger_generator_parameters', $parameters, $route, $callback, $method );
+
+		return is_array( $parameters ) ? $parameters : [];
 	}
 
 	/**
@@ -174,21 +251,4 @@ class Generator {
 	public function write_yaml_to_file( string $file ): void {}
 
 	public function write_json_to_file( string $file ): void {}
-
-	/**
-	 * Convert the regex of the WordPress REST API route to an OpenAPI path.
-	 *
-	 * This method will convert the named arguments in the route to the :arg format.
-	 *
-	 * @param string $route Route to convert.
-	 * @return string
-	 */
-	protected function convert_route_for_document( string $route ): string {
-		return preg_replace_callback(
-			// '/\{(.+?)\}/',
-			'/\(\?P<(\w+)>[^)]+\)/',
-			fn ( $matches ) => ':' . $matches[1],
-			$route,
-		);
-	}
 }

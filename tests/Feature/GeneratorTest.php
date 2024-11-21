@@ -13,6 +13,7 @@ use cebe\openapi\spec\OpenApi;
 use cebe\openapi\Writer;
 
 use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
+use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
 
 /**
  * Generator Test
@@ -24,7 +25,7 @@ class GeneratorTest extends TestCase {
 
 		$document = $generator->get_document();
 
-		// file_put_contents( __DIR__ . '/test.yml', Writer::writeToYaml( $document ) );
+		file_put_contents( __DIR__ . '/test.yml', Writer::writeToYaml( $document ) );
 		dd(
 			// Dump the YML.
 			Writer::writeToYaml( $document ),
@@ -50,12 +51,7 @@ class GeneratorTest extends TestCase {
 		foreach ( array_keys( rest_get_server()->get_routes() ) as $route ) {
 			$route = sanitize_route_for_openapi( $route );
 
-			// Ensure that the route is valid for OpenAPI (should not contain any regex).
-			$this->assertStringNotContainsString( '?P', $route );
-			$this->assertStringNotContainsString( '(', $route );
-			$this->assertStringNotContainsString( ')', $route );
-			$this->assertStringNotContainsString( '<', $route );
-			$this->assertStringNotContainsString( '>', $route );
+			$this->assertTrue( validate_route_for_openapi( $route ), "Route '$route' is not valid for OpenAPI." );
 
 		}
 	}

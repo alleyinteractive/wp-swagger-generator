@@ -61,3 +61,15 @@ function get_route_parameters( string $route ): array {
 
 	return $matches[1] ?? [];
 }
+
+/**
+ * Filter out null values from an array.
+ *
+ * @template T of array<mixed>
+ *
+ * @param array<T> $array Array to filter.
+ * @return array<T>
+ */
+function filter_out_nulls( array $array ): array {
+	return array_filter( $array, fn ( $value ) => null !== $value );
+}

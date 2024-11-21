@@ -1,1333 +1,4748 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   title: 'Test Site'
   description: 'REST API documentation for WordPress.'
   version: 1.0.0
 paths:
   /wp-json/:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/batch/v1:
-    summary: ''
-    description: ''
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/oembed/1.0:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: namespace
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: oembed/1.0
   /wp-json/oembed/1.0/embed:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: url
+          in: query
+          description: 'The URL of the resource for which to fetch oEmbed data.'
+          required: true
+          schema:
+            type: string
+        -
+          name: format
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: json
+        -
+          name: maxwidth
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: 600
   /wp-json/oembed/1.0/proxy:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: url
+          in: query
+          description: 'The URL of the resource for which to fetch oEmbed data.'
+          required: true
+          schema:
+            type: string
+        -
+          name: format
+          in: query
+          description: 'The oEmbed format to use.'
+          required: false
+          schema:
+            enum:
+              - json
+              - xml
+            type: string
+            default: json
+        -
+          name: maxwidth
+          in: query
+          description: 'The maximum width of the embed frame in pixels.'
+          required: false
+          schema:
+            type: integer
+            default: 600
+        -
+          name: maxheight
+          in: query
+          description: 'The maximum height of the embed frame in pixels.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: discover
+          in: query
+          description: 'Whether to perform an oEmbed discovery request for unsanctioned providers.'
+          required: false
+          schema:
+            type: boolean
+            default: true
   /wp-json/wp/v2:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: namespace
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: wp/v2
   /wp-json/wp/v2/posts:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: after
+          in: query
+          description: 'Limit response to posts published after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_after
+          in: query
+          description: 'Limit response to posts modified after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: author
+          in: query
+          description: 'Limit result set to posts assigned to specific authors.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: author_exclude
+          in: query
+          description: 'Ensure result set excludes posts assigned to specific authors.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: before
+          in: query
+          description: 'Limit response to posts published before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_before
+          in: query
+          description: 'Limit response to posts modified before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - author
+              - date
+              - id
+              - include
+              - modified
+              - parent
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+        -
+          name: search_columns
+          in: query
+          description: 'Array of column names to be searched.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - post_title
+                - post_content
+                - post_excerpt
+              type: string
+            default: []
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to posts with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: status
+          in: query
+          description: 'Limit result set to posts assigned one or more statuses.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - publish
+                - future
+                - draft
+                - pending
+                - private
+                - trash
+                - auto-draft
+                - inherit
+                - request-pending
+                - request-confirmed
+                - request-failed
+                - request-completed
+                - any
+              type: string
+            default: publish
+        -
+          name: tax_relation
+          in: query
+          description: 'Limit result set based on relationship between multiple taxonomies.'
+          required: false
+          schema:
+            enum:
+              - AND
+              - OR
+            type: string
+        -
+          name: categories
+          in: query
+          description: 'Limit result set to items with specific terms assigned in the categories taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
+        -
+          name: categories_exclude
+          in: query
+          description: 'Limit result set to items except those with specific terms assigned in the categories taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
+        -
+          name: tags
+          in: query
+          description: 'Limit result set to items with specific terms assigned in the tags taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
+        -
+          name: tags_exclude
+          in: query
+          description: 'Limit result set to items except those with specific terms assigned in the tags taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
+        -
+          name: sticky
+          in: query
+          description: 'Limit result set to items that are sticky.'
+          required: false
+          schema:
+            type: boolean
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/posts/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/posts/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: excerpt_length
+          in: query
+          description: 'Override the default excerpt length.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: password
+          in: query
+          description: 'The password for the post if it is password protected.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/posts/(?P<parent>[\d]+)/revisions':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/posts/{parent}/revisions':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/posts/(?P<parent>[\d]+)/revisions/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by object attribute.'
+          required: false
+          schema:
+            enum:
+              - date
+              - id
+              - include
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+  '/wp-json/wp/v2/posts/{parent}/revisions/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/posts/(?P<id>[\d]+)/autosaves':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/posts/{id}/autosaves':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: query
+          description: 'The ID for the parent of the autosave.'
+          required: false
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/posts/(?P<parent>[\d]+)/autosaves/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/posts/{parent}/autosaves/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the autosave.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID for the autosave.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/pages:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: after
+          in: query
+          description: 'Limit response to posts published after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_after
+          in: query
+          description: 'Limit response to posts modified after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: author
+          in: query
+          description: 'Limit result set to posts assigned to specific authors.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: author_exclude
+          in: query
+          description: 'Ensure result set excludes posts assigned to specific authors.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: before
+          in: query
+          description: 'Limit response to posts published before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_before
+          in: query
+          description: 'Limit response to posts modified before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: menu_order
+          in: query
+          description: 'Limit result set to posts with a specific menu_order value.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - author
+              - date
+              - id
+              - include
+              - modified
+              - parent
+              - relevance
+              - slug
+              - include_slugs
+              - title
+              - menu_order
+            type: string
+            default: date
+        -
+          name: parent
+          in: query
+          description: 'Limit result set to items with particular parent IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: parent_exclude
+          in: query
+          description: 'Limit result set to all items except those of a particular parent ID.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: search_columns
+          in: query
+          description: 'Array of column names to be searched.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - post_title
+                - post_content
+                - post_excerpt
+              type: string
+            default: []
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to posts with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: status
+          in: query
+          description: 'Limit result set to posts assigned one or more statuses.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - publish
+                - future
+                - draft
+                - pending
+                - private
+                - trash
+                - auto-draft
+                - inherit
+                - request-pending
+                - request-confirmed
+                - request-failed
+                - request-completed
+                - any
+              type: string
+            default: publish
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/pages/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/pages/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: excerpt_length
+          in: query
+          description: 'Override the default excerpt length.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: password
+          in: query
+          description: 'The password for the post if it is password protected.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/pages/(?P<parent>[\d]+)/revisions':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/pages/{parent}/revisions':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/pages/(?P<parent>[\d]+)/revisions/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by object attribute.'
+          required: false
+          schema:
+            enum:
+              - date
+              - id
+              - include
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+  '/wp-json/wp/v2/pages/{parent}/revisions/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/pages/(?P<id>[\d]+)/autosaves':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/pages/{id}/autosaves':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: query
+          description: 'The ID for the parent of the autosave.'
+          required: false
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/pages/(?P<parent>[\d]+)/autosaves/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/pages/{parent}/autosaves/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the autosave.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID for the autosave.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/media:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: after
+          in: query
+          description: 'Limit response to posts published after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_after
+          in: query
+          description: 'Limit response to posts modified after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: author
+          in: query
+          description: 'Limit result set to posts assigned to specific authors.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: author_exclude
+          in: query
+          description: 'Ensure result set excludes posts assigned to specific authors.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: before
+          in: query
+          description: 'Limit response to posts published before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_before
+          in: query
+          description: 'Limit response to posts modified before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - author
+              - date
+              - id
+              - include
+              - modified
+              - parent
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+        -
+          name: parent
+          in: query
+          description: 'Limit result set to items with particular parent IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: parent_exclude
+          in: query
+          description: 'Limit result set to all items except those of a particular parent ID.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: search_columns
+          in: query
+          description: 'Array of column names to be searched.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - post_title
+                - post_content
+                - post_excerpt
+              type: string
+            default: []
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to posts with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: status
+          in: query
+          description: 'Limit result set to posts assigned one or more statuses.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - inherit
+                - private
+                - trash
+              type: string
+            default: inherit
+        -
+          name: media_type
+          in: query
+          description: 'Limit result set to attachments of a particular media type.'
+          required: false
+          schema:
+            enum:
+              - image
+              - video
+              - text
+              - application
+              - audio
+            type: string
+        -
+          name: mime_type
+          in: query
+          description: 'Limit result set to attachments of a particular MIME type.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/media/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/media/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/media/(?P<id>[\d]+)/post-process':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/media/{id}/post-process':
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/media/(?P<id>[\d]+)/edit':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the attachment.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/media/{id}/edit':
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/menu-items:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 100
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: after
+          in: query
+          description: 'Limit response to posts published after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_after
+          in: query
+          description: 'Limit response to posts modified after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: before
+          in: query
+          description: 'Limit response to posts published before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_before
+          in: query
+          description: 'Limit response to posts modified before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: asc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by object attribute.'
+          required: false
+          schema:
+            enum:
+              - author
+              - date
+              - id
+              - include
+              - modified
+              - parent
+              - relevance
+              - slug
+              - include_slugs
+              - title
+              - menu_order
+            type: string
+            default: menu_order
+        -
+          name: search_columns
+          in: query
+          description: 'Array of column names to be searched.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - post_title
+                - post_content
+                - post_excerpt
+              type: string
+            default: []
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to posts with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: status
+          in: query
+          description: 'Limit result set to posts assigned one or more statuses.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - publish
+                - future
+                - draft
+                - pending
+                - private
+                - trash
+                - auto-draft
+                - inherit
+                - request-pending
+                - request-confirmed
+                - request-failed
+                - request-completed
+                - any
+              type: string
+            default: publish
+        -
+          name: tax_relation
+          in: query
+          description: 'Limit result set based on relationship between multiple taxonomies.'
+          required: false
+          schema:
+            enum:
+              - AND
+              - OR
+            type: string
+        -
+          name: menus
+          in: query
+          description: 'Limit result set to items with specific terms assigned in the menus taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
+        -
+          name: menus_exclude
+          in: query
+          description: 'Limit result set to items except those with specific terms assigned in the menus taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
+        -
+          name: menu_order
+          in: query
+          description: 'Limit result set to posts with a specific menu_order value.'
+          required: false
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/menu-items/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/menu-items/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/menu-items/(?P<id>[\d]+)/autosaves':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/menu-items/{id}/autosaves':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: query
+          description: 'The ID for the parent of the autosave.'
+          required: false
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/menu-items/(?P<parent>[\d]+)/autosaves/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/menu-items/{parent}/autosaves/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the autosave.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID for the autosave.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/blocks:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: after
+          in: query
+          description: 'Limit response to posts published after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_after
+          in: query
+          description: 'Limit response to posts modified after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: before
+          in: query
+          description: 'Limit response to posts published before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_before
+          in: query
+          description: 'Limit response to posts modified before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - author
+              - date
+              - id
+              - include
+              - modified
+              - parent
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+        -
+          name: search_columns
+          in: query
+          description: 'Array of column names to be searched.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - post_title
+                - post_content
+                - post_excerpt
+              type: string
+            default: []
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to posts with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: status
+          in: query
+          description: 'Limit result set to posts assigned one or more statuses.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - publish
+                - future
+                - draft
+                - pending
+                - private
+                - trash
+                - auto-draft
+                - inherit
+                - request-pending
+                - request-confirmed
+                - request-failed
+                - request-completed
+                - any
+              type: string
+            default: publish
+        -
+          name: tax_relation
+          in: query
+          description: 'Limit result set based on relationship between multiple taxonomies.'
+          required: false
+          schema:
+            enum:
+              - AND
+              - OR
+            type: string
+        -
+          name: wp_pattern_category
+          in: query
+          description: 'Limit result set to items with specific terms assigned in the wp_pattern_category taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
+        -
+          name: wp_pattern_category_exclude
+          in: query
+          description: 'Limit result set to items except those with specific terms assigned in the wp_pattern_category taxonomy.'
+          required: false
+          schema:
+            type:
+              - object
+              - array
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/blocks/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/blocks/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: excerpt_length
+          in: query
+          description: 'Override the default excerpt length.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: password
+          in: query
+          description: 'The password for the post if it is password protected.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/blocks/(?P<parent>[\d]+)/revisions':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/blocks/{parent}/revisions':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/blocks/(?P<parent>[\d]+)/revisions/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by object attribute.'
+          required: false
+          schema:
+            enum:
+              - date
+              - id
+              - include
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+  '/wp-json/wp/v2/blocks/{parent}/revisions/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/blocks/(?P<id>[\d]+)/autosaves':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/blocks/{id}/autosaves':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: query
+          description: 'The ID for the parent of the autosave.'
+          required: false
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/blocks/(?P<parent>[\d]+)/autosaves/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/blocks/{parent}/autosaves/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/templates/(?P<parent>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/revisions':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the autosave.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID for the autosave.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/templates/{parent}/revisions':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/templates/(?P<parent>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/revisions/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by object attribute.'
+          required: false
+          schema:
+            enum:
+              - date
+              - id
+              - include
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+  '/wp-json/wp/v2/templates/{parent}/revisions/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/templates/(?P<id>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/autosaves':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/templates/{id}/autosaves':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/templates/(?P<parent>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/autosaves/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/templates/{parent}/autosaves/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: id
+          in: path
+          description: 'The ID for the autosave.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/templates:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: wp_id
+          in: query
+          description: 'Limit to the specified post id.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: area
+          in: query
+          description: 'Limit to the specified template part area.'
+          required: false
+          schema:
+            type: string
+        -
+          name: post_type
+          in: query
+          description: 'Post type to get the templates for.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/templates/lookup:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/templates/(?P<id>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: slug
+          in: query
+          description: 'The slug of the template to get the fallback for'
+          required: true
+          schema:
+            type: string
+        -
+          name: is_custom
+          in: query
+          description: 'Indicates if a template is custom or part of the template hierarchy'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: template_prefix
+          in: query
+          description: 'The template prefix for the created template. This is used to extract the main template type, e.g. in `taxonomy-books` extracts the `taxonomy`'
+          required: false
+          schema:
+            type: string
+  '/wp-json/wp/v2/templates/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/template-parts/(?P<parent>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/revisions':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/template-parts/{parent}/revisions':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/template-parts/(?P<parent>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/revisions/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by object attribute.'
+          required: false
+          schema:
+            enum:
+              - date
+              - id
+              - include
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+  '/wp-json/wp/v2/template-parts/{parent}/revisions/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/template-parts/(?P<id>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/autosaves':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/template-parts/{id}/autosaves':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/template-parts/(?P<parent>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)/autosaves/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/template-parts/{parent}/autosaves/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+        -
+          name: id
+          in: path
+          description: 'The ID for the autosave.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/template-parts:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: wp_id
+          in: query
+          description: 'Limit to the specified post id.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: area
+          in: query
+          description: 'Limit to the specified template part area.'
+          required: false
+          schema:
+            type: string
+        -
+          name: post_type
+          in: query
+          description: 'Post type to get the templates for.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/template-parts/lookup:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/template-parts/(?P<id>([^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)[\/\w%-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: slug
+          in: query
+          description: 'The slug of the template to get the fallback for'
+          required: true
+          schema:
+            type: string
+        -
+          name: is_custom
+          in: query
+          description: 'Indicates if a template is custom or part of the template hierarchy'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: template_prefix
+          in: query
+          description: 'The template prefix for the created template. This is used to extract the main template type, e.g. in `taxonomy-books` extracts the `taxonomy`'
+          required: false
+          schema:
+            type: string
+  '/wp-json/wp/v2/template-parts/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/global-styles/(?P<parent>[\d]+)/revisions':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/global-styles/{parent}/revisions':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/global-styles/(?P<parent>[\d]+)/revisions/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+  '/wp-json/wp/v2/global-styles/{parent}/revisions/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/global-styles/themes/(?P<stylesheet>[\/\s%\w\.\(\)\[\]\@_\-]+)/variations':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the global styles revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the global styles revision.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/global-styles/themes/{stylesheet}/variations':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/global-styles/themes/(?P<stylesheet>[^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: stylesheet
+          in: path
+          description: 'The theme identifier'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/global-styles/themes/{stylesheet}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/global-styles/(?P<id>[\/\w-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: stylesheet
+          in: path
+          description: 'The theme identifier'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/global-styles/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a template'
+          required: true
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/navigation:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: after
+          in: query
+          description: 'Limit response to posts published after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_after
+          in: query
+          description: 'Limit response to posts modified after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: before
+          in: query
+          description: 'Limit response to posts published before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: modified_before
+          in: query
+          description: 'Limit response to posts modified before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - author
+              - date
+              - id
+              - include
+              - modified
+              - parent
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+        -
+          name: search_columns
+          in: query
+          description: 'Array of column names to be searched.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - post_title
+                - post_content
+                - post_excerpt
+              type: string
+            default: []
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to posts with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: status
+          in: query
+          description: 'Limit result set to posts assigned one or more statuses.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - publish
+                - future
+                - draft
+                - pending
+                - private
+                - trash
+                - auto-draft
+                - inherit
+                - request-pending
+                - request-confirmed
+                - request-failed
+                - request-completed
+                - any
+              type: string
+            default: publish
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/navigation/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/navigation/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: password
+          in: query
+          description: 'The password for the post if it is password protected.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/navigation/(?P<parent>[\d]+)/revisions':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/navigation/{parent}/revisions':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/navigation/(?P<parent>[\d]+)/revisions/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by object attribute.'
+          required: false
+          schema:
+            enum:
+              - date
+              - id
+              - include
+              - relevance
+              - slug
+              - include_slugs
+              - title
+            type: string
+            default: date
+  '/wp-json/wp/v2/navigation/{parent}/revisions/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/navigation/(?P<id>[\d]+)/autosaves':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the revision.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the revision.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/navigation/{id}/autosaves':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: query
+          description: 'The ID for the parent of the autosave.'
+          required: false
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/navigation/(?P<parent>[\d]+)/autosaves/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/navigation/{parent}/autosaves/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: parent
+          in: path
+          description: 'The ID for the parent of the autosave.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID for the autosave.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/font-families:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - id
+              - include
+            type: string
+            default: id
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to posts with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/font-families/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/font-families/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/font-families/(?P<font_family_id>[\d]+)/font-faces':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the post.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/font-families/{font_family_id}/font-faces':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: font_family_id
+          in: path
+          description: 'The ID for the parent font family of the font face.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - id
+              - include
+            type: string
+            default: id
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/font-families/(?P<font_family_id>[\d]+)/font-faces/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: font_family_id
+          in: path
+          description: 'The ID for the parent font family of the font face.'
+          required: true
+          schema:
+            type: integer
+  '/wp-json/wp/v2/font-families/{font_family_id}/font-faces/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: font_family_id
+          in: path
+          description: 'The ID for the parent font family of the font face.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the font face.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: font_family_id
+          in: path
+          description: 'The ID for the parent font family of the font face.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the font face.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/types:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/types/(?P<type>[\w-]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/types/{type}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: type
+          in: path
+          description: 'An alphanumeric identifier for the post type.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/statuses:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/statuses/(?P<status>[\w-]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/statuses/{status}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: status
+          in: path
+          description: 'An alphanumeric identifier for the status.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/taxonomies:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/taxonomies/(?P<taxonomy>[\w-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: type
+          in: query
+          description: 'Limit results to taxonomies associated with a specific post type.'
+          required: false
+          schema:
+            type: string
+  '/wp-json/wp/v2/taxonomies/{taxonomy}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: taxonomy
+          in: path
+          description: 'An alphanumeric identifier for the taxonomy.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/categories:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: asc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by term attribute.'
+          required: false
+          schema:
+            enum:
+              - id
+              - include
+              - name
+              - slug
+              - include_slugs
+              - term_group
+              - description
+              - count
+            type: string
+            default: name
+        -
+          name: hide_empty
+          in: query
+          description: 'Whether to hide terms not assigned to any posts.'
+          required: false
+          schema:
+            type: boolean
+            default: false
+        -
+          name: parent
+          in: query
+          description: 'Limit result set to terms assigned to a specific parent.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: post
+          in: query
+          description: 'Limit result set to terms assigned to a specific post.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to terms with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/categories/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/categories/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/tags:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: asc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by term attribute.'
+          required: false
+          schema:
+            enum:
+              - id
+              - include
+              - name
+              - slug
+              - include_slugs
+              - term_group
+              - description
+              - count
+            type: string
+            default: name
+        -
+          name: hide_empty
+          in: query
+          description: 'Whether to hide terms not assigned to any posts.'
+          required: false
+          schema:
+            type: boolean
+            default: false
+        -
+          name: post
+          in: query
+          description: 'Limit result set to terms assigned to a specific post.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to terms with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/tags/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/tags/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/menus:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: asc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by term attribute.'
+          required: false
+          schema:
+            enum:
+              - id
+              - include
+              - name
+              - slug
+              - include_slugs
+              - term_group
+              - description
+              - count
+            type: string
+            default: name
+        -
+          name: hide_empty
+          in: query
+          description: 'Whether to hide terms not assigned to any posts.'
+          required: false
+          schema:
+            type: boolean
+            default: false
+        -
+          name: post
+          in: query
+          description: 'Limit result set to terms assigned to a specific post.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to terms with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/menus/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/menus/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/wp_pattern_category:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: asc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by term attribute.'
+          required: false
+          schema:
+            enum:
+              - id
+              - include
+              - name
+              - slug
+              - include_slugs
+              - term_group
+              - description
+              - count
+            type: string
+            default: name
+        -
+          name: hide_empty
+          in: query
+          description: 'Whether to hide terms not assigned to any posts.'
+          required: false
+          schema:
+            type: boolean
+            default: false
+        -
+          name: post
+          in: query
+          description: 'Limit result set to terms assigned to a specific post.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to terms with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/wp_pattern_category/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/wp_pattern_category/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the term.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/users:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: asc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by user attribute.'
+          required: false
+          schema:
+            enum:
+              - id
+              - include
+              - name
+              - registered_date
+              - slug
+              - include_slugs
+              - email
+              - url
+            type: string
+            default: name
+        -
+          name: slug
+          in: query
+          description: 'Limit result set to users with one or more specific slugs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: roles
+          in: query
+          description: 'Limit result set to users matching at least one specific role provided. Accepts csv list or single role.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: capabilities
+          in: query
+          description: 'Limit result set to users matching at least one specific capability provided. Accepts csv list or single capability.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        -
+          name: who
+          in: query
+          description: 'Limit result set to users who are considered authors.'
+          required: false
+          schema:
+            enum:
+              - authors
+            type: string
+        -
+          name: has_published_posts
+          in: query
+          description: 'Limit result set to users who have published posts.'
+          required: false
+          schema:
+            type:
+              - boolean
+              - array
+            items:
+              enum:
+                post: post
+                page: page
+                attachment: attachment
+                nav_menu_item: nav_menu_item
+                wp_block: wp_block
+                wp_template: wp_template
+                wp_template_part: wp_template_part
+                wp_global_styles: wp_global_styles
+                wp_navigation: wp_navigation
+                wp_font_family: wp_font_family
+                wp_font_face: wp_font_face
+              type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/users/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/users/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the user.'
+          required: true
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the user.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the user.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the user.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the user.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/users/me:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/users/(?P<user_id>(?:[\d]+|me))/application-passwords':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/users/{user_id}/application-passwords':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/users/(?P<user_id>(?:[\d]+|me))/application-passwords/introspect':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/users/{user_id}/application-passwords/introspect':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/users/(?P<user_id>(?:[\d]+|me))/application-passwords/(?P<uuid>[\w\-]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/users/{user_id}/application-passwords/{uuid}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/comments:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: after
+          in: query
+          description: 'Limit response to comments published after a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: author
+          in: query
+          description: 'Limit result set to comments assigned to specific user IDs. Requires authorization.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        -
+          name: author_exclude
+          in: query
+          description: 'Ensure result set excludes comments assigned to specific user IDs. Requires authorization.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+        -
+          name: author_email
+          in: query
+          description: 'Limit result set to that from a specific author email. Requires authorization.'
+          required: false
+          schema:
+            type: string
+        -
+          name: before
+          in: query
+          description: 'Limit response to comments published before a given ISO8601 compliant date.'
+          required: false
+          schema:
+            type: string
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by comment attribute.'
+          required: false
+          schema:
+            enum:
+              - date
+              - date_gmt
+              - id
+              - include
+              - post
+              - parent
+              - type
+            type: string
+            default: date_gmt
+        -
+          name: parent
+          in: query
+          description: 'Limit result set to comments of specific parent IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: parent_exclude
+          in: query
+          description: 'Ensure result set excludes specific parent IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: post
+          in: query
+          description: 'Limit result set to comments assigned to specific post IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: status
+          in: query
+          description: 'Limit result set to comments assigned a specific status. Requires authorization.'
+          required: false
+          schema:
+            type: string
+            default: approve
+        -
+          name: type
+          in: query
+          description: 'Limit result set to comments assigned a specific type. Requires authorization.'
+          required: false
+          schema:
+            type: string
+            default: comment
+        -
+          name: password
+          in: query
+          description: 'The password for the post if it is password protected.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/comments/(?P<id>[\d]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/comments/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the comment.'
+          required: true
+          schema:
+            type: integer
+        -
+          name: password
+          in: query
+          description: 'The password for the parent post of the comment (if the post is password protected).'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the comment.'
+          required: true
+          schema:
+            type: integer
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the comment.'
+          required: true
+          schema:
+            type: integer
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the comment.'
+          required: true
+          schema:
+            type: integer
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the comment.'
+          required: true
+          schema:
+            type: integer
   /wp-json/wp/v2/search:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/block-renderer/(?P<name>[a-z0-9-]+/[a-z0-9-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: type
+          in: query
+          description: 'Limit results to items of an object type.'
+          required: false
+          schema:
+            enum:
+              - post
+              - term
+              - post-format
+            type: string
+            default: post
+        -
+          name: subtype
+          in: query
+          description: 'Limit results to items of one or more object subtypes.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - post
+                - page
+                - category
+                - post_tag
+                - any
+              type: string
+            default: any
+        -
+          name: exclude
+          in: query
+          description: 'Ensure result set excludes specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+        -
+          name: include
+          in: query
+          description: 'Limit result set to specific IDs.'
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+            default: []
+  '/wp-json/wp/v2/block-renderer/{name}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: name
+          in: path
+          description: 'Unique registered name for the block.'
+          required: true
+          schema:
+            type: string
+        -
+          name: attributes
+          in: query
+          description: 'Attributes for the block.'
+          required: false
+          schema:
+            type: object
+            default: []
+        -
+          name: post_id
+          in: query
+          description: 'ID of the post context.'
+          required: false
+          schema:
+            type: integer
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: name
+          in: path
+          description: 'Unique registered name for the block.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/block-types:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/block-types/(?P<namespace>[a-zA-Z0-9_-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: namespace
+          in: query
+          description: 'Block namespace.'
+          required: false
+          schema:
+            type: string
+  '/wp-json/wp/v2/block-types/{namespace}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/block-types/(?P<namespace>[a-zA-Z0-9_-]+)/(?P<name>[a-zA-Z0-9_-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: namespace
+          in: path
+          description: 'Block namespace.'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/block-types/{namespace}/{name}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: name
+          in: path
+          description: 'Block name.'
+          required: true
+          schema:
+            type: string
+        -
+          name: namespace
+          in: path
+          description: 'Block namespace.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/settings:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/themes:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/themes/(?P<stylesheet>[^\/:<>\*\?"\|]+(?:\/[^\/:<>\*\?"\|]+)?)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: status
+          in: query
+          description: 'Limit result set to themes assigned one or more statuses.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - active
+                - inactive
+              type: string
+  '/wp-json/wp/v2/themes/{stylesheet}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: stylesheet
+          in: path
+          description: "The theme's stylesheet. This uniquely identifies the theme."
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/plugins:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: status
+          in: query
+          description: 'Limits results to plugins with the given status.'
+          required: false
+          schema:
+            type: array
+            items:
+              enum:
+                - inactive
+                - active
+              type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/plugins/(?P<plugin>[^.\/]+(?:\/[^.\/]+)?)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/plugins/{plugin}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: plugin
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: plugin
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: plugin
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: plugin
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: plugin
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/sidebars:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/sidebars/(?P<id>[\w-]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/sidebars/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of a registered sidebar'
+          required: true
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/widget-types:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/widget-types/(?P<id>[a-zA-Z0-9_-]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/widget-types/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/widget-types/(?P<id>[a-zA-Z0-9_-]+)/encode':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The widget type id.'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/widget-types/{id}/encode':
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/widget-types/(?P<id>[a-zA-Z0-9_-]+)/render':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The widget type id.'
+          required: true
+          schema:
+            type: string
+  '/wp-json/wp/v2/widget-types/{id}/render':
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The widget type id.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/widgets:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: sidebar
+          in: query
+          description: 'The sidebar to return widgets for.'
+          required: false
+          schema:
+            type: string
     post:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/widgets/(?P<id>[\w\-]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/widgets/{id}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
     post:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the widget.'
+          required: true
+          schema:
+            type: string
     put:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the widget.'
+          required: true
+          schema:
+            type: string
     patch:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier for the widget.'
+          required: true
+          schema:
+            type: string
     delete:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/block-directory/search:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+        -
+          name: term
+          in: query
+          description: 'Limit result set to blocks matching the search term.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/pattern-directory/patterns:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 100
+        -
+          name: search
+          in: query
+          description: 'Limit results to those matching a string.'
+          required: false
+          schema:
+            type: string
+        -
+          name: category
+          in: query
+          description: 'Limit results to those matching a category ID.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: keyword
+          in: query
+          description: 'Limit results to those matching a keyword ID.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: slug
+          in: query
+          description: 'Limit results to those matching a pattern (slug).'
+          required: false
+          schema:
+            type: array
+        -
+          name: offset
+          in: query
+          description: 'Offset the result set by a specific number of items.'
+          required: false
+          schema:
+            type: integer
+        -
+          name: order
+          in: query
+          description: 'Order sort attribute ascending or descending.'
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            default: desc
+        -
+          name: orderby
+          in: query
+          description: 'Sort collection by post attribute.'
+          required: false
+          schema:
+            enum:
+              - author
+              - date
+              - id
+              - include
+              - modified
+              - parent
+              - relevance
+              - slug
+              - include_slugs
+              - title
+              - favorite_count
+            type: string
+            default: date
   /wp-json/wp/v2/block-patterns/patterns:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/block-patterns/categories:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-site-health/v1:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: namespace
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: wp-site-health/v1
   /wp-json/wp-site-health/v1/tests/background-updates:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-site-health/v1/tests/loopback-requests:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-site-health/v1/tests/https-status:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-site-health/v1/tests/dotorg-communication:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-site-health/v1/tests/authorization-header:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-site-health/v1/directory-sizes:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-site-health/v1/tests/page-cache:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-block-editor/v1:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: namespace
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            default: wp-block-editor/v1
   /wp-json/wp-block-editor/v1/url-details:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: url
+          in: query
+          description: 'The URL to process.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp/v2/menu-locations:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/menu-locations/(?P<location>[\w-]+)':
-    summary: ''
-    description: ''
+      parameters: []
+  '/wp-json/wp/v2/menu-locations/{location}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters:
+        -
+          name: location
+          in: path
+          description: 'An alphanumeric identifier for the menu location.'
+          required: true
+          schema:
+            type: string
   /wp-json/wp-block-editor/v1/export:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp-block-editor/v1/navigation-fallback:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
   /wp-json/wp/v2/font-collections:
-    summary: ''
-    description: ''
     get:
-      summary: ''
-      description: ''
-      responses: {  }
-  '/wp-json/wp/v2/font-collections/(?P<slug>[\/\w-]+)':
-    summary: ''
-    description: ''
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Current page of the collection.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: per_page
+          in: query
+          description: 'Maximum number of items to be returned in result set.'
+          required: false
+          schema:
+            type: integer
+            default: 10
+  '/wp-json/wp/v2/font-collections/{slug}':
     get:
-      summary: ''
-      description: ''
-      responses: {  }
+      parameters: []
