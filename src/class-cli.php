@@ -5,7 +5,7 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\;
+namespace Alley\WP\Swagger_Generator;
 
 use Mantle\Support\Traits\Hookable;
 

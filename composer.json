@@ -17,7 +17,8 @@
     "require": {
         "php": "^8.1",
         "alleyinteractive/composer-wordpress-autoloader": "^1.0",
-        "devizzent/cebe-php-openapi": "^1.1"
+        "devizzent/cebe-php-openapi": "^1.1",
+        "mantle-framework/support": "^1.2"
     },
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^2.0",
@@ -31,6 +32,11 @@
             "pestphp/pest-plugin": true
         },
         "sort-packages": true
+    },
+    "autoload": {
+      "files": [
+        "src/helpers.php"
+      ]
     },
     "autoload-dev": {
         "psr-4": {
