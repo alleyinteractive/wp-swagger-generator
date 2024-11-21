@@ -45,11 +45,19 @@ function sanitize_route_for_openapi( string $route ): string {
  * @return bool
  */
 function validate_route_for_openapi( string $route ): bool {
-	return ! str( $route )->contains( [
-		'?P',
-		'(',
-		')',
-		'<',
-		'>',
-	] );
+	return ! str( $route )->contains( [ '?P', '(', ')', '<', '>' ] );
+}
+
+/**
+ * Get route parameters.
+ *
+ * Retrieves the parameters from a route like '/wp/v2/posts/{id}'.
+ *
+ * @param string $route Route to get parameters from.
+ * @return array<string>
+ */
+function get_route_parameters( string $route ): array {
+	preg_match_all( '/{([^}]+)}/', $route, $matches );
+
+	return $matches[1] ?? [];
 }

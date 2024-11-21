@@ -10,6 +10,7 @@ namespace Alley\WP\Swagger_Generator\Tests\Unit;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+use function Alley\WP\Swagger_Generator\get_route_parameters;
 use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
 use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
 
@@ -26,12 +27,12 @@ class HelpersTest extends TestCase {
 	 * @param string $input Input route.
 	 * @param string $expected Expected output route.
 	 */
-	#[DataProvider( 'routeDataProvider' )]
+	#[DataProvider( 'route_data_provider' )]
 	public function test_sanitize_route_for_openapi( string $input, string $expected ): void {
 		$this->assertSame( $expected, sanitize_route_for_openapi( $input ) );
 	}
 
-	public static function routeDataProvider(): array {
+	public static function route_data_provider(): array {
 		return [
 			[
 				'/wp/v2/posts/(?P<id>\d+)',
@@ -79,16 +80,37 @@ class HelpersTest extends TestCase {
 	 * @param string $route Route to validate.
 	 * @param bool $status Expected validation status.
 	 */
-	#[DataProvider( 'validationDataProvider' )]
+	#[DataProvider( 'validation_data_provider' )]
 	public function test_it_can_validate_a_route( string $route, bool $status ): void {
 		$this->assertSame( $status, validate_route_for_openapi( $route ) );
 	}
 
-	public static function validationDataProvider(): array {
+	public static function validation_data_provider(): array {
 		return [
 			[ '/wp/v2/posts/{id}', true ],
 			[ '/wp/v2/example/{id}(.*)', false ],
 			[ '/wp-json/wp/v2/plugins/(?P<plugin>[^.\/]+(?:\/[^.\/]+)?)', false ],
+		];
+	}
+
+	/**
+	 * Test the route parameter extractor.
+	 *
+	 * @param string $route Route to extract parameters from.
+	 * @param array<string> $expected Expected parameters.
+	 */
+	#[DataProvider( 'parameter_data_provider' )]
+	public function test_get_route_parameters( string $route, array $expected ): void {
+		$this->assertSame( $expected, get_route_parameters( $route ) );
+	}
+
+	public static function parameter_data_provider(): array {
+		return [
+			[ '/wp/v2/posts/{id}', [ 'id' ] ],
+			[ '/wp/v2/posts/{id}/another/{example}', [ 'id', 'example' ] ],
+			[ '/wp-json/wp/v2/plugins/{plugin}', [ 'plugin' ] ],
+			[ '/wp-json/wp/v2/themes/{stylesheet}', [ 'stylesheet' ] ],
+			[ '/wp-json/wp/v2/global-styles/themes/{stylesheet}/variations', [ 'stylesheet' ] ],
 		];
 	}
 }
