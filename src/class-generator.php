@@ -7,13 +7,8 @@
 
 namespace Alley\WP\Swagger_Generator;
 
-use cebe\openapi\spec\Info;
-use cebe\openapi\spec\OpenApi;
-use cebe\openapi\spec\Operation;
+use cebe\openapi\spec\OpenApi as Document;
 use cebe\openapi\spec\Parameter;
-use cebe\openapi\spec\PathItem;
-use cebe\openapi\spec\Paths;
-use Mantle\Support\Traits\Hookable;
 use RuntimeException;
 
 use function Mantle\Support\Helpers\collect;
@@ -33,19 +28,16 @@ class Generator {
 	/**
 	 * OpenAPI document.
 	 *
-	 * @var OpenApi
+	 * @var Document
 	 */
-	protected OpenApi $document;
+	protected Document $document;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param string|null $namespace Namespace to limit the generation to, e.g. 'wp/v2'
 	 */
-	public function __construct(
-		public readonly string|null $namespace = null,
-		public readonly string|null $version = '1.0.0'
-	) {}
+	public function __construct( public readonly string|null $namespace = null, public readonly string|null $version = '1.0.0' ) {}
 
 	/**
 	 * Compile the document.
@@ -57,116 +49,10 @@ class Generator {
 			throw new RuntimeException( 'Document already compiled.' );
 		}
 
-		$this->document = new OpenApi( [
-			/**
-			 * Filter the OpenAPI version.
-			 *
-			 * @param string $version OpenAPI version.
-			 */
-			'openapi' => apply_filters( 'wp_swagger_generator_openapi_version', '3.0.3' ),
-			'info'    => $this->get_info(),
-			'paths'   => $this->get_paths(),
-		] );
-
-		/**
-		 * Filter the OpenAPI document.
-		 *
-		 * @param OpenApi $document OpenAPI document.
-		 */
-		$this->document = apply_filters( 'wp_swagger_generator_document', $this->document );
-
-		if ( ! $this->document instanceof OpenApi ) {
-			throw new RuntimeException( 'Document must be an instance of OpenApi.' );
-		}
-	}
-
-	/**
-	 * Get the info for the document.
-	 *
-	 * @return Info
-	 */
-	protected function get_info(): Info {
-		return new Info( [
-			/**
-			 * Filter the OpenAPI title.
-			 *
-			 * @param string $title OpenAPI title.
-			 */
-			'title'       => apply_filters( 'wp_swagger_generator_openapi_title', get_bloginfo( 'name' ) ),
-			/**
-			 * Filter the OpenAPI description.
-			 *
-			 * @param string $description OpenAPI description.
-			 */
-			'description' => apply_filters( 'wp_swagger_generator_openapi_description', __( 'REST API documentation for WordPress.', 'wp-swagger-generator' ) ),
-			/**
-			 * Filter the OpenAPI version.
-			 *
-			 * @param string $version OpenAPI version.
-			 */
-			'version'     => apply_filters( 'wp_swagger_generator_openapi_version', $this->version ),
-		] );
-	}
-
-	/**
-	 * Get the paths.
-	 *
-	 * @return Paths
-	 */
-	protected function get_paths(): Paths {
 		// Ensure the REST API has been initialized.
 		rest_api_init();
 
-		$paths = [];
-
-		// dd(rest_get_server()->get_routes());
-
-		foreach ( rest_get_server()->get_routes( $this->namespace ) as $route => $callbacks ) {
-			$route = sanitize_route_for_openapi( $route );
-
-			if ( ! validate_route_for_openapi( $route ) ) {
-				/**
-				 * Filter an invalid route to be included in the OpenAPI document.
-				 *
-				 * @param string|null $route Route.
-				 * @param array       $callbacks Callbacks.
-				 */
-				$route = apply_filters( 'wp_swagger_generator_invalid_route', $route, $callbacks );
-
-				if ( ! $route || ! validate_route_for_openapi( $route ) ) {
-					continue;
-				}
-			}
-
-			$path = new PathItem(
-				apply_filters( 'wp_swagger_generator_path_item', [], $route, $callbacks ),
-			);
-
-			foreach ( $callbacks as $callback ) {
-				foreach ( array_keys( $callback['methods'] ) as $method ) {
-					$method = strtolower( $method );
-
-					$path->{$method} = new Operation(
-						apply_filters(
-							'wp_swagger_generator_operation',
-							[
-								'parameters' => $this->get_parameters( $route, $callback, $method ),
-								// 'summary'     => '',
-								// 'description' => '',
-								// 'responses'   => [],
-							],
-							$route,
-							$method,
-							$callback,
-						),
-					);
-				}
-			}
-
-			$paths[ '/' . rest_get_url_prefix() . $route ] = $path;
-		}
-
-		return new Paths( $paths );
+		$this->document = Factory\Document_Factory::make( $this )->generate();
 	}
 
 	/**
@@ -217,6 +103,9 @@ class Generator {
 				return null;
 			}
 
+			// TODO: break out to standalone class.
+			// TODO: Support object AND array returns.
+			// TODO: Support oneof
 			return new Parameter( filter_out_nulls( [
 				'name'        => $argument_name,
 				'description' => $argument['description'] ?? '',
@@ -239,12 +128,16 @@ class Generator {
 		return is_array( $parameters ) ? $parameters : [];
 	}
 
+	protected function get_responses(): array {
+
+	}
+
 	/**
 	 * Get the OpenAPI document.
 	 *
-	 * @return OpenApi
+	 * @return Document
 	 */
-	public function get_document(): OpenApi {
+	public function get_document(): Document {
 		return $this->document;
 	}
 
