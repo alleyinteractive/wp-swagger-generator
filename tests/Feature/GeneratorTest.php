@@ -20,7 +20,7 @@ use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
  */
 class GeneratorTest extends TestCase {
 	public function test_it_can_generate_openapi_document() {
-		$generator = new Generator();
+		$generator = new Generator( 'wp/v2' );
 		$generator->compile();
 
 		$document = $generator->get_document();

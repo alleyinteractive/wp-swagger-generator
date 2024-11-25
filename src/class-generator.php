@@ -8,8 +8,9 @@
 namespace Alley\WP\Swagger_Generator;
 
 use cebe\openapi\spec\OpenApi as Document;
-use cebe\openapi\spec\Parameter;
+use Mantle\Testing\Doubles\Spy_REST_Server;
 use RuntimeException;
+use WP_REST_Server;
 
 use function Mantle\Support\Helpers\collect;
 
@@ -33,6 +34,13 @@ class Generator {
 	protected Document $document;
 
 	/**
+	 * Original REST server reference.
+	 *
+	 * @var WP_REST_Server
+	 */
+	protected WP_REST_Server $original_rest_server;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string|null $namespace Namespace to limit the generation to, e.g. 'wp/v2'
@@ -49,87 +57,52 @@ class Generator {
 			throw new RuntimeException( 'Document already compiled.' );
 		}
 
-		// Ensure the REST API has been initialized.
-		rest_api_init();
+		$this->replace_rest_server();
 
-		$this->document = Factory\Document_Factory::make( $this )->generate();
+		$this->document = Factory\Document_Factory::make( $this );
+
+		$this->restore_rest_server();
 	}
 
 	/**
-	 * Get the parameters for the operation.
+	 * Replace the REST server with the one from this plugin.
 	 *
-	 * @param string $route Route.
-	 * @param array  $callback Callback.
-	 * @param string $method Method.
-	 *
-	 * @return Parameter[]
+	 * We need to replace the REST server with the one from this plugin so that
+	 * we can properly inspect the raw endpoint data.
 	 */
-	protected function get_parameters( string $route, array $callback, string $method ): array {
-		$parameters = [];
+	protected function replace_rest_server(): void {
+		// Remove the existing REST server if it exists.
+		if ( isset( $GLOBALS['wp_rest_server'] ) ) {
+			// Bail if the REST server is already the one from this plugin.
+			if ( $GLOBALS['wp_rest_server'] instanceof REST_Server || $GLOBALS['wp_rest_server'] instanceof Spy_REST_Server ) {
+				return;
+			}
 
-		if ( empty( $callback['args'] ) ) {
-			return $parameters;
+			$this->original_rest_server = $GLOBALS['wp_rest_server'];
+
+			unset( $GLOBALS['wp_rest_server'] );
 		}
 
-		$route_parameters = get_route_parameters( $route );
-		$request_parameter_type = 'get' === $method ? 'query' : 'path';
+		// Replace the REST server with either the spy from Mantle testing if
+		// testing or the one from this plugin.
+		add_filter(
+			'wp_rest_server_class',
+			fn () => class_exists( Spy_REST_Server::class ) && defined( 'MANTLE_IS_TESTING' ) && MANTLE_IS_TESTING
+				? Spy_REST_Server::class
+				: REST_Server::class,
+			PHP_INT_MAX,
+		);
 
-		$parameters = collect( $callback['args'] )->map( function ( array $argument, $argument_name ) use ( $route, $route_parameters, $method ): ?Parameter {
-			$is_route_parameter = in_array( $argument_name, $route_parameters, true );
-			$is_query_parameter = 'get' === $method && ! $is_route_parameter;
-
-			// Force some query parameters to always be a query parameter.
-			if ( in_array( $argument_name, [ 'context', '_embedded', '_fields', '_link' ], true ) ) {
-				$is_query_parameter = true;
-			}
-
-			if ( 'context' === $argument_name ) {
-				return null;
-			}
-
-			/**
-			 * Filter whether an argument for a REST API route is a query parameter.
-			 *
-			 * @param bool   $is_query_parameter Whether the argument is a query parameter.
-			 * @param string $argument           Argument name.
-			 * @param string $route              OpenAPI route.
-			 * @param array  $argument           Route callback argument.
-			 * @param string $method             HTTP method.
-			 */
-			$is_query_parameter = apply_filters( 'wp_swagger_generator_is_query_parameter', $is_query_parameter, $argument_name, $route, $argument, $method );
-
-			// Skip arguments that will be handled in the request body.
-			if ( ! $is_route_parameter && ! $is_query_parameter ) {
-				return null;
-			}
-
-			// TODO: break out to standalone class.
-			// TODO: Support object AND array returns.
-			// TODO: Support oneof
-			return new Parameter( filter_out_nulls( [
-				'name'        => $argument_name,
-				'description' => $argument['description'] ?? '',
-				'in'          => $is_route_parameter ? 'path'                                 : 'query',
-				'required'    => $is_route_parameter ? true : ( isset( $argument['required'] ) ? (bool) $argument['required']: false ), // Required can only be true.
-				'schema'      => filter_out_nulls( [
-					'type'    => $argument['type'] ?? 'string',
-					'items'   => $argument['items'] ?? null,
-					'enum'    => $argument['enum'] ?? null,
-					'default' => $argument['default'] ?? null,
-				] ),
-			] ) );
-		} )->filter()->values()->toArray();
-
-		// TODO: Include global parameters for specific REST API routes (_embedded,
-		// _links, etc).
-
-		$parameters = apply_filters( 'wp_swagger_generator_parameters', $parameters, $route, $callback, $method );
-
-		return is_array( $parameters ) ? $parameters : [];
+		rest_api_init();
 	}
 
-	protected function get_responses(): array {
-
+	/**
+	 * Restore the original REST server.
+	 */
+	protected function restore_rest_server(): void {
+		if ( isset( $this->original_rest_server ) ) {
+			$GLOBALS['wp_rest_server'] = $this->original_rest_server;
+		}
 	}
 
 	/**

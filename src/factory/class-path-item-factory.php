@@ -7,16 +7,8 @@
 
 namespace Alley\WP\Swagger_Generator\Factory;
 
-use Alley\WP\Swagger_Generator\Generator;
-use cebe\openapi\spec\Info;
-use cebe\openapi\spec\OpenApi as Document;
-use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\PathItem;
-use cebe\openapi\spec\Paths;
-use RuntimeException;
-
-use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
-use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
+use InvalidArgumentException;
 
 /**
  * Path Item Factory class.
@@ -25,16 +17,20 @@ use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
  */
 class Path_Item_Factory extends Factory {
 	/**
-	 * Constructor.
+	 * Supported methods.
 	 *
-	 * @param Generator $generator Generator instance.
-	 * @param Document  $document Document instance.
-	 * @param string    $route Route.
-	 * @param array     $callbacks Callbacks.
+	 * @var string[]
 	 */
-	public function __construct( Generator $generator, public Document $document, public readonly string $route, public readonly array $callbacks ) {
-		parent::__construct( $generator );
-	}
+	public const SUPPORTED_METHODS = [
+		'get',
+		'post',
+		'put',
+		'patch',
+		'delete',
+		'head',
+		'options',
+		'trace',
+	];
 
 	/**
 	 * Generate the factory object(s).
@@ -44,72 +40,26 @@ class Path_Item_Factory extends Factory {
 	public function generate(): PathItem {
 		$path = new PathItem( [] );
 
-		foreach ( $this->callbacks as $callback ) {
+		if ( empty( $this->arguments['callbacks'] ) || ! is_array( $this->arguments['callbacks'] ) ) {
+			throw new InvalidArgumentException( 'Expected argument "callbacks" to be a non-empty array.' );
+		}
+
+		foreach ( $this->arguments['callbacks'] as $callback ) {
 			foreach ( array_keys( $callback['methods'] ) as $method ) {
 				$method = strtolower( $method );
 
-				$path->{$method} = new Operation(
-					apply_filters(
-						'wp_swagger_generator_operation',
-						[
-							'parameters' => $this->get_parameters( $route, $callback, $method ),
-							// 'summary'     => '',
-							// 'description' => '',
-							// 'responses'   => [],
-						],
-						$route,
-						$method,
-						$callback,
-					),
-				);
+				if ( ! in_array( $method, self::SUPPORTED_METHODS, true ) ) {
+					continue;
+				}
+
+				$path->{$method} = Operation_Factory::make( $this->generator, $this->forward_arguments( [
+					'method'    => $method,
+					'callbacks' => [], // Prevent all the callbacks from being forwarded along.
+					'callback'  => $callback,
+				] ) );
 			}
-
-			/**
-			 * Filter the path item.
-			 *
-			 * Supports injecting the summary, description, and other properties for the path item.
-			 *
-			 * @param PathItem $path_item Path item.
-			 * @param string   $route Route.
-			 * @param array    $callbacks Route callback methods.
-			 */
-			$path = apply_filters( 'wp_swagger_generator_path', $path, $route, $callbacks );
-
-			if ( ! $path instanceof PathItem ) {
-				throw new RuntimeException( 'Path item must be an instance of ' . PathItem::class );
-			}
-
-			$paths[ '/' . rest_get_url_prefix() . $route ] = $path;
 		}
 
-		return new Paths( $paths );
-	}
-
-	/**
-	 * Get the info for the document.
-	 *
-	 * @return Info
-	 */
-	protected function get_info(): Info {
-		return new Info( [
-			/**
-			 * Filter the OpenAPI title.
-			 *
-			 * @param string $title OpenAPI title.
-			 */
-			'title'       => apply_filters( 'wp_swagger_generator_openapi_title', get_bloginfo( 'name' ) ),
-			/**
-			 * Filter the OpenAPI description.
-			 *
-			 * @param string $description OpenAPI description.
-			 */
-			'description' => apply_filters( 'wp_swagger_generator_openapi_description', __( 'REST API documentation for WordPress.', 'wp-swagger-generator' ) ),
-			/**
-			 * Filter the OpenAPI version.
-			 *
-			 * @param string $version OpenAPI version.
-			 */
-			'version'     => apply_filters( 'wp_swagger_generator_openapi_version', $this->version ),
-		] );
+		return $path;
 	}
 }

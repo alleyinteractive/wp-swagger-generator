@@ -7,10 +7,8 @@
 
 namespace Alley\WP\Swagger_Generator\Factory;
 
-use cebe\openapi\spec\OpenApi as Document;
-use Alley\WP\Swagger_Generator\Generator;
-use cebe\openapi\spec\Info;
 use cebe\openapi\spec\Paths;
+use RuntimeException;
 
 use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
 use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
@@ -22,16 +20,6 @@ use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
  */
 class Paths_Factory extends Factory {
 	/**
-	 * Constructor.
-	 *
-	 * @param Generator $generator Generator instance.
-	 * @param Document  $document Document instance.
-	 */
-	public function __construct( Generator $generator, public Document $document ) {
-		parent::__construct( $generator );
-	}
-
-	/**
 	 * Generate the factory object(s).
 	 *
 	 * @return Paths
@@ -39,7 +27,9 @@ class Paths_Factory extends Factory {
 	public function generate(): Paths {
 		$paths = [];
 
-		foreach ( rest_get_server()->get_routes( $this->generator->namespace ) as $route => $callbacks ) {
+		dd(rest_get_server());
+
+		foreach ( $this->get_routes( $this->generator->namespace ) as $route => $callbacks ) {
 			$route = sanitize_route_for_openapi( $route );
 
 			if ( ! validate_route_for_openapi( $route ) ) {
@@ -56,37 +46,32 @@ class Paths_Factory extends Factory {
 				}
 			}
 
-			$paths[ '/' . rest_get_url_prefix() . $route ] = Path_Item_Factory::make( $this->generator, $this->document, $route, $callbacks )->generate();
+			$paths[ '/' . rest_get_url_prefix() . $route ] = Path_Item_Factory::make( $this->generator, $this->forward_arguments( [
+				'callbacks' => $callbacks,
+				'route'     => $route,
+			] ) );
 		}
 
 		return new Paths( $paths );
 	}
 
 	/**
-	 * Get the info for the document.
+	 * Retrieve the routes for generation.
 	 *
-	 * @return Info
+	 * @return array
 	 */
-	protected function get_info(): Info {
-		return new Info( [
-			/**
-			 * Filter the OpenAPI title.
-			 *
-			 * @param string $title OpenAPI title.
-			 */
-			'title'       => apply_filters( 'wp_swagger_generator_openapi_title', get_bloginfo( 'name' ) ),
-			/**
-			 * Filter the OpenAPI description.
-			 *
-			 * @param string $description OpenAPI description.
-			 */
-			'description' => apply_filters( 'wp_swagger_generator_openapi_description', __( 'REST API documentation for WordPress.', 'wp-swagger-generator' ) ),
-			/**
-			 * Filter the OpenAPI version.
-			 *
-			 * @param string $version OpenAPI version.
-			 */
-			'version'     => apply_filters( 'wp_swagger_generator_openapi_version', $this->version ),
-		] );
+	protected function get_routes(): array {
+		$server = rest_get_server();
+
+		if ( ! method_exists( $server, 'get_raw_endpoint_data' ) ) {
+			throw new RuntimeException( 'REST server does not have a method to get raw endpoint data.' );
+		}
+
+		if ( empty( $this->generator->namespace ) ) {
+			return $server->get_raw_endpoint_data();
+		}
+
+		$prefix = '/' . ltrim( $this->generator->namespace, '/' );
+		dd($prefix);
 	}
 }

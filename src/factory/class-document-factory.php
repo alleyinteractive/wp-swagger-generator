@@ -38,10 +38,9 @@ class Document_Factory extends Factory {
 			// TODO
 			'servers'    => [],
 			'components' => [],
-
 		] );
 
-		$document->paths = Paths_Factory::make( $this->generator, $this )->generate();
+		$document->paths = Paths_Factory::make( $this->generator, [ 'document' => $document ] );
 
 		/**
 		 * Filter the OpenAPI document.
@@ -65,23 +64,23 @@ class Document_Factory extends Factory {
 	protected function get_info(): Info {
 		return new Info( [
 			/**
-			 * Filter the OpenAPI title.
+			 * Filter the OpenAPI Document title.
 			 *
-			 * @param string $title OpenAPI title.
+			 * @param string $title OpenAPI Document title.
 			 */
-			'title'       => apply_filters( 'wp_swagger_generator_openapi_title', get_bloginfo( 'name' ) ),
+			'title'       => apply_filters( 'wp_swagger_generator_document_title', get_bloginfo( 'name' ) ),
 			/**
-			 * Filter the OpenAPI description.
+			 * Filter the OpenAPI Document description.
 			 *
-			 * @param string $description OpenAPI description.
+			 * @param string $description OpenAPI Document description.
 			 */
-			'description' => apply_filters( 'wp_swagger_generator_openapi_description', __( 'REST API documentation for WordPress.', 'wp-swagger-generator' ) ),
+			'description' => apply_filters( 'wp_swagger_generator_document_description', __( 'REST API documentation for WordPress.', 'wp-swagger-generator' ) ),
 			/**
-			 * Filter the OpenAPI version.
+			 * Filter the OpenAPI Document API version.
 			 *
-			 * @param string $version OpenAPI version.
+			 * @param string $version OpenAPI Document API version.
 			 */
-			'version'     => apply_filters( 'wp_swagger_generator_openapi_version', $this->version ),
+			'version'     => apply_filters( 'wp_swagger_generator_document_version', $this->generator->version ),
 		] );
 	}
 }
