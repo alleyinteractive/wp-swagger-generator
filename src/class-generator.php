@@ -71,16 +71,18 @@ class Generator {
 	 * we can properly inspect the raw endpoint data.
 	 */
 	protected function replace_rest_server(): void {
+		global $wp_rest_server;
+
 		// Remove the existing REST server if it exists.
-		if ( isset( $GLOBALS['wp_rest_server'] ) ) {
+		if ( isset( $wp_rest_server ) ) {
 			// Bail if the REST server is already the one from this plugin.
-			if ( $GLOBALS['wp_rest_server'] instanceof REST_Server || $GLOBALS['wp_rest_server'] instanceof Spy_REST_Server ) {
+			if ( $wp_rest_server instanceof REST_Server || $wp_rest_server instanceof Spy_REST_Server ) {
 				return;
 			}
 
-			$this->original_rest_server = $GLOBALS['wp_rest_server'];
+			$this->original_rest_server = $wp_rest_server;
 
-			unset( $GLOBALS['wp_rest_server'] );
+			unset( $wp_rest_server );
 		}
 
 		// Replace the REST server with either the spy from Mantle testing if
@@ -100,8 +102,12 @@ class Generator {
 	 * Restore the original REST server.
 	 */
 	protected function restore_rest_server(): void {
+		global $wp_rest_server;
+
 		if ( isset( $this->original_rest_server ) ) {
-			$GLOBALS['wp_rest_server'] = $this->original_rest_server;
+			$wp_rest_server = $this->original_rest_server;
+
+			unset( $this->original_rest_server );
 		}
 	}
 
