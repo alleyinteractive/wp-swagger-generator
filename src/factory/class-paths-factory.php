@@ -18,7 +18,7 @@ use function Mantle\Support\Helpers\collect;
 /**
  * Path Factory class.
  *
- * @extends Factory<\cebe\openapi\Paths>
+ * @extends Factory<\cebe\openapi\Paths, array{document: \cebe\openapi\OpenApi}>
  */
 class Paths_Factory extends Factory {
 	/**
@@ -27,30 +27,24 @@ class Paths_Factory extends Factory {
 	 * @return Paths
 	 */
 	public function generate(): Paths {
+		$arguments = $this->arguments;
+
+		// Dump the phpstan type
+		// \PHPStan\dumpType( $arguments );
 		$paths = [];
 
-		dd($this->get_routes());
+		// dd($this->get_routes());
 
-		foreach ( $this->get_routes() as $route => $callbacks ) {
-			$route = sanitize_route_for_openapi( $route );
+		foreach ( $this->get_routes() as $route ) {
+			$sanitized_route = $route->sanitized_route();
 
-			if ( ! validate_route_for_openapi( $route ) ) {
-				/**
-				 * Filter an invalid route to be included in the OpenAPI document.
-				 *
-				 * @param string|null $route Route.
-				 * @param array       $callbacks Callbacks.
-				 */
-				$route = apply_filters( 'wp_swagger_generator_invalid_route', $route, $callbacks );
-
-				if ( ! $route || ! validate_route_for_openapi( $route ) ) {
-					continue;
-				}
+			// Skip if the route can't be sanitized for OpenAPI.
+			if ( ! $sanitized_route ) {
+				continue;
 			}
 
-			$paths[ '/' . rest_get_url_prefix() . $route ] = Path_Item_Factory::make( $this->generator, $this->forward_arguments( [
-				'callbacks' => $callbacks,
-				'route'     => $route,
+			$paths[ '/' . rest_get_url_prefix() . $sanitized_route ] = Path_Item_Factory::make( $this->generator, $this->forward_arguments( [
+				'route' => $route,
 			] ) );
 		}
 
@@ -62,7 +56,7 @@ class Paths_Factory extends Factory {
 	 *
 	 * Mirror WP_REST_Server::get_routes() and normalize the data while preserving a bit more data.
 	 *
-	 * @return array<string, \Alley\WP\Swagger_Generator\REST_API\Route>
+	 * @return array<int, \Alley\WP\Swagger_Generator\REST_API\Route>
 	 */
 	protected function get_routes(): array {
 		$server = rest_get_server();
@@ -114,6 +108,6 @@ class Paths_Factory extends Factory {
 				handlers: $compiled['handlers'],
 				options: $compiled['options'],
 			);
-		} )->all();
+		} )->values()->all();
 	}
 }

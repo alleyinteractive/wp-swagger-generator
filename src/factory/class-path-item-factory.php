@@ -7,13 +7,14 @@
 
 namespace Alley\WP\Swagger_Generator\Factory;
 
+use Alley\WP\Swagger_Generator\REST_API\Route;
 use cebe\openapi\spec\PathItem;
 use InvalidArgumentException;
 
 /**
  * Path Item Factory class.
  *
- * @extends Factory<\cebe\openapi\PathItem>
+ * @extends Factory<\cebe\openapi\PathItem, array{document: \cebe\openapi\OpenApi, route: \Alley\WP\Swagger_Generator\REST_API\Route}>
  */
 class Path_Item_Factory extends Factory {
 	/**
@@ -38,14 +39,12 @@ class Path_Item_Factory extends Factory {
 	 * @return PathItem
 	 */
 	public function generate(): PathItem {
+		$this->validate_arguments( [ 'route' => Route::class ] );
+
 		$path = new PathItem( [] );
 
-		if ( empty( $this->arguments['callbacks'] ) || ! is_array( $this->arguments['callbacks'] ) ) {
-			throw new InvalidArgumentException( 'Expected argument "callbacks" to be a non-empty array.' );
-		}
-
-		foreach ( $this->arguments['callbacks'] as $callback ) {
-			foreach ( array_keys( $callback['methods'] ) as $method ) {
+		foreach ( $this->arguments['handlers'] as $handler ) {
+			foreach ( array_keys( $handler['methods'] ) as $method ) {
 				$method = strtolower( $method );
 
 				if ( ! in_array( $method, self::SUPPORTED_METHODS, true ) ) {
@@ -53,9 +52,8 @@ class Path_Item_Factory extends Factory {
 				}
 
 				$path->{$method} = Operation_Factory::make( $this->generator, $this->forward_arguments( [
-					'method'    => $method,
-					'callbacks' => [], // Prevent all the callbacks from being forwarded along.
-					'callback'  => $callback,
+					'handler' => $handler,
+					'method'  => $method,
 				] ) );
 			}
 		}

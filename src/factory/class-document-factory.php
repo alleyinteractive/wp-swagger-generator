@@ -14,7 +14,7 @@ use RuntimeException;
 /**
  * Document Factory class.
  *
- * @extends Factory<\cebe\openapi\OpenApi>
+ * @extends Factory<\cebe\openapi\OpenApi, array{}>
  */
 class Document_Factory extends Factory {
 	/**
