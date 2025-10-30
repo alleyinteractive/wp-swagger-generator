@@ -13,6 +13,7 @@ use RuntimeException;
 use WP_REST_Server;
 
 use function Mantle\Support\Helpers\collect;
+use function Mantle\Support\Helpers\is_unit_testing;
 
 /**
  * OpenAPI Generator
@@ -89,9 +90,7 @@ class Generator {
 		// testing or the one from this plugin.
 		add_filter(
 			'wp_rest_server_class',
-			fn () => class_exists( Spy_REST_Server::class ) && defined( 'MANTLE_IS_TESTING' ) && MANTLE_IS_TESTING
-				? Spy_REST_Server::class
-				: REST_Server::class,
+			fn () => class_exists( Spy_REST_Server::class ) && is_unit_testing() ? Spy_REST_Server::class : REST_Server::class,
 			PHP_INT_MAX,
 		);
 

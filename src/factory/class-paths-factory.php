@@ -7,8 +7,10 @@
 
 namespace Alley\WP\Swagger_Generator\Factory;
 
-use Alley\WP\Swagger_Generator\REST_API\Route;
+use Alley\WP\Swagger_Generator\Objects\Route;
+use Alley\WP\Swagger_Generator\Objects\Route_Handler;
 use cebe\openapi\spec\Paths;
+use Mantle\Support\Arr;
 use RuntimeException;
 
 use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
@@ -18,22 +20,18 @@ use function Mantle\Support\Helpers\collect;
 /**
  * Path Factory class.
  *
- * @extends Factory<\cebe\openapi\Paths, array{document: \cebe\openapi\OpenApi}>
+ * @extends Factory<\cebe\openapi\spec\Paths, array{document: \cebe\openapi\spec\OpenApi}>
  */
 class Paths_Factory extends Factory {
 	/**
 	 * Generate the factory object(s).
 	 *
-	 * @return Paths
+	 * @return Paths<\cebe\openapi\spec\PathItem>
 	 */
 	public function generate(): Paths {
-		$arguments = $this->arguments;
-
-		// Dump the phpstan type
-		// \PHPStan\dumpType( $arguments );
 		$paths = [];
 
-		// dd($this->get_routes());
+		dump($this->get_routes());
 
 		foreach ( $this->get_routes() as $route ) {
 			$sanitized_route = $route->sanitized_route();
@@ -43,9 +41,10 @@ class Paths_Factory extends Factory {
 				continue;
 			}
 
-			$paths[ '/' . rest_get_url_prefix() . $sanitized_route ] = Path_Item_Factory::make( $this->generator, $this->forward_arguments( [
-				'route' => $route,
-			] ) );
+			$paths[ '/' . rest_get_url_prefix() . $sanitized_route ] = ( new Path_Item_Factory( $this->generator, array_merge(
+				$this->arguments,
+				[ 'route' => $route ],
+			) ) )->generate();
 		}
 
 		return new Paths( $paths );
@@ -56,7 +55,9 @@ class Paths_Factory extends Factory {
 	 *
 	 * Mirror WP_REST_Server::get_routes() and normalize the data while preserving a bit more data.
 	 *
-	 * @return array<int, \Alley\WP\Swagger_Generator\REST_API\Route>
+	 * @throws RuntimeException If the REST server does not have the expected method or no routes are found.
+	 *
+	 * @return array<int, \Alley\WP\Swagger_Generator\Objects\Route>
 	 */
 	protected function get_routes(): array {
 		$server = rest_get_server();
@@ -65,7 +66,18 @@ class Paths_Factory extends Factory {
 			throw new RuntimeException( 'REST server does not have a method to get raw endpoint data.' );
 		}
 
-		$routes = collect( $server->get_raw_endpoint_data() );
+		/**
+		 * Routes from the REST API server.
+		 *
+		 * @var array<string, array<string, array<int|string, mixed>>>
+		 */
+		$routes = $server->get_raw_endpoint_data();
+
+		if ( ! is_array( $routes ) || empty( $routes ) ) {
+			throw new RuntimeException( 'No routes found from the REST server.' );
+		}
+
+		$routes = collect( $routes );
 
 		if ( ! empty( $this->generator->namespace ) ) {
 			$routes = $routes->where( 'namespace', $this->generator->namespace );
@@ -76,37 +88,35 @@ class Paths_Factory extends Factory {
 				$arguments = [ $arguments ];
 			}
 
-			$compiled = [
-				'methods'  => [],
-				'handlers' => [],
-				'options'  => [],
-			];
+			$handlers = [];
+			$options  = [];
 
 			foreach ( $arguments as $index => $argument ) {
-				if ( is_numeric( $index ) && isset( $argument['methods'] ) ) {
-					$compiled['handlers'][] = $argument;
-
-					if ( is_string( $argument['methods'] ) ) {
-						$compiled['methods'] = array_merge( $compiled['methods'], explode( ',', $argument['methods'] ) );
-					} else {
-						$compiled['methods'] = array_merge( $compiled['methods'], $argument['methods'] );
-					}
-				} else {
-					$compiled['options'][ $index ] = $argument;
+				if ( is_string( $index ) ) {
+					$options[ $index ] = $argument;
+					continue;
 				}
-			}
 
-			$compiled['methods'] = collect( $compiled['methods'] )
-				->map( fn ( $method ) => strtolower( $method ) )
-				->unique()
-				->values()
-				->all();
+				// Bail if the route handler is invalid.
+				if ( ! is_array( $argument ) || ! isset( $argument['methods'] ) ) {
+					continue;
+				}
+
+				if ( ! isset( $argument['callback'] ) || ! is_callable( $argument['callback'] ) ) {
+					continue;
+				}
+
+				$handlers[] = new Route_Handler(
+					methods: Arr::wrap( $argument['methods'] ),
+					callback: $argument['callback'],
+					args: $argument['args'] ?? [],
+				);
+			}
 
 			return new Route(
 				route: $route,
-				methods: $compiled['methods'],
-				handlers: $compiled['handlers'],
-				options: $compiled['options'],
+				handlers: $handlers,
+				options: $options,
 			);
 		} )->values()->all();
 	}

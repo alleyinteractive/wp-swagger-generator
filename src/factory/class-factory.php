@@ -16,17 +16,17 @@ use Alley\WP\Swagger_Generator\Generator;
  */
 abstract class Factory {
 	/**
-	 * Create a new static instance from arguments.
+	 * Make and generate a factory object.
 	 *
-	 * @param Generator $generator Generator instance.
-	 * @param array     $arguments Arguments for the factory.
-	 * @phpstan-param TArguments $arguments
-	 *
+	 * @param Generator    $generator Generator instance.
+	 * @param array<string, mixed> $arguments Arguments for the factory.
 	 * @return mixed
+	 *
+	 * @phpstan-param   TArguments $arguments
 	 * @phpstan-return TObject
 	 */
 	public static function make( Generator $generator, array $arguments = [] ): mixed {
-		return ( new static( $generator, $arguments ) )->generate(); // @phpstan-ignore-line unsafe usage of new static()
+		return ( new static( $generator, $arguments ) )->generate();
 	}
 
 	/**
@@ -37,16 +37,6 @@ abstract class Factory {
 	 * @phpstan-param   TArguments $arguments
 	 */
 	public function __construct( public readonly Generator $generator, public array $arguments = [] ) {}
-
-	/**
-	 * Merge arguments with the factory arguments.
-	 *
-	 * @param array<mixed> $arguments Arguments to merge.
-	 * @return array<mixed>
-	 */
-	public function forward_arguments( array $arguments ): array {
-		return array_merge( $this->arguments, $arguments );
-	}
 
 	/**
 	 * Validate that the expected arguments are set.

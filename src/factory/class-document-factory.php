@@ -9,6 +9,7 @@ namespace Alley\WP\Swagger_Generator\Factory;
 
 use cebe\openapi\spec\Info;
 use cebe\openapi\spec\OpenApi as Document;
+use cebe\openapi\spec\Server;
 use RuntimeException;
 
 /**
@@ -34,13 +35,12 @@ class Document_Factory extends Factory {
 			 */
 			'openapi'    => apply_filters( 'wp_swagger_generator_openapi_version', '3.0.3' ),
 			'info'       => $this->get_info(),
-
-			// TODO
-			'servers'    => [],
+			'servers'    => $this->get_servers(),
 			'components' => [],
 		] );
 
 		$document->paths = Paths_Factory::make( $this->generator, [ 'document' => $document ] );
+		// dd($document);
 
 		/**
 		 * Filter the OpenAPI document.
@@ -62,7 +62,7 @@ class Document_Factory extends Factory {
 	 * @return Info
 	 */
 	protected function get_info(): Info {
-		return new Info( [
+		$info = [
 			/**
 			 * Filter the OpenAPI Document title.
 			 *
@@ -81,6 +81,34 @@ class Document_Factory extends Factory {
 			 * @param string $version OpenAPI Document API version.
 			 */
 			'version'     => apply_filters( 'wp_swagger_generator_document_version', $this->generator->version ),
+		];
+
+		/**
+		 * Filter the Swagger document information section.
+		 *
+		 * @link https://swagger.io/docs/specification/v3_0/api-general-info/
+		 * @param array<string, string|array<string, string>> $info Document information.
+		 */
+		return new Info( apply_filters( 'wp_swagger_generator_document_info', $info ) );
+	}
+
+	/**
+	 * Get the servers for the document.
+	 *
+	 * @return Server[]
+	 */
+	protected function get_servers(): array {
+		/**
+		 * Filter the OpenAPI servers.
+		 *
+		 * @link https://swagger.io/docs/specification/v3_0/api-host-and-base-path/
+		 * @param Server[] $servers OpenAPI servers.
+		 */
+		return (array) apply_filters( 'wp_swagger_generator_servers', [
+			new Server( [
+				'url'         => get_rest_url(),
+				'description' => 'REST API server',
+			] ),
 		] );
 	}
 }

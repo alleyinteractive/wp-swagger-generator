@@ -7,14 +7,17 @@
 
 namespace Alley\WP\Swagger_Generator\Factory;
 
-use Alley\WP\Swagger_Generator\REST_API\Route;
+use Alley\WP\Swagger_Generator\Objects\Route;
 use cebe\openapi\spec\PathItem;
 use InvalidArgumentException;
 
 /**
  * Path Item Factory class.
  *
- * @extends Factory<\cebe\openapi\PathItem, array{document: \cebe\openapi\OpenApi, route: \Alley\WP\Swagger_Generator\REST_API\Route}>
+ * @extends Factory<\cebe\openapi\spec\PathItem, array{
+ *   document: \cebe\openapi\spec\OpenApi,
+ *   route: \Alley\WP\Swagger_Generator\Objects\Route
+ * }>
  */
 class Path_Item_Factory extends Factory {
 	/**
@@ -51,7 +54,7 @@ class Path_Item_Factory extends Factory {
 					continue;
 				}
 
-				$path->{$method} = Operation_Factory::make( $this->generator, $this->forward_arguments( [
+				$path->{$method} = Operation_Factory::make( $this->generator, array_merge( $this->arguments, [
 					'handler' => $handler,
 					'method'  => $method,
 				] ) );

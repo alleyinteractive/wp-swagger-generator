@@ -5,7 +5,7 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\REST_API;
+namespace Alley\WP\Swagger_Generator\Objects;
 
 use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
 use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
@@ -24,17 +24,11 @@ readonly class Route {
 	/**
 	 * Constructor.
 	 *
-	 * @param string              $route Raw route.
-	 * @param array<string>       $methods HTTP methods.
-	 * @param array<int, array{
-	 *   methods: array<string>,
-	 *   callback: callable,
-	 *   args: array<string, array<string, string>>,
-	 *   permission_callback?: callable,
-	 * }>                          $handlers Handlers.
+	 * @param string               $route Raw route.
+	 * @param array<Route_Handler> $handlers Handlers.
 	 * @param array<string, mixed> $options Options.
 	 */
-	public function __construct( public string $route, public array $methods, public array $handlers, public array $options ) {}
+	public function __construct( public string $route, public array $handlers, public array $options ) {}
 
 	/**
 	 * Get the sanitized route.

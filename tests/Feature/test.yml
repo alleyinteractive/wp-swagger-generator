@@ -3,7 +3,10 @@ info:
   title: 'Test Site'
   description: 'REST API documentation for WordPress.'
   version: 1.0.0
-servers: []
+servers:
+  -
+    url: 'http://example.org/wp-json/'
+    description: 'REST API server'
 components: {  }
 paths:
   /wp-json/wp/v2: {  }
@@ -47,11 +50,6 @@ paths:
   /wp-json/wp/v2/template-parts: {  }
   /wp-json/wp/v2/template-parts/lookup: {  }
   '/wp-json/wp/v2/template-parts/{id}': {  }
-  '/wp-json/wp/v2/global-styles/{parent}/revisions': {  }
-  '/wp-json/wp/v2/global-styles/{parent}/revisions/{id}': {  }
-  '/wp-json/wp/v2/global-styles/themes/{stylesheet}/variations': {  }
-  '/wp-json/wp/v2/global-styles/themes/{stylesheet}': {  }
-  '/wp-json/wp/v2/global-styles/{id}': {  }
   /wp-json/wp/v2/navigation: {  }
   '/wp-json/wp/v2/navigation/{id}': {  }
   '/wp-json/wp/v2/navigation/{parent}/revisions': {  }
@@ -89,6 +87,11 @@ paths:
   /wp-json/wp/v2/block-types: {  }
   '/wp-json/wp/v2/block-types/{namespace}': {  }
   '/wp-json/wp/v2/block-types/{namespace}/{name}': {  }
+  '/wp-json/wp/v2/global-styles/{parent}/revisions': {  }
+  '/wp-json/wp/v2/global-styles/{parent}/revisions/{id}': {  }
+  '/wp-json/wp/v2/global-styles/themes/{stylesheet}/variations': {  }
+  '/wp-json/wp/v2/global-styles/themes/{stylesheet}': {  }
+  '/wp-json/wp/v2/global-styles/{id}': {  }
   /wp-json/wp/v2/settings: {  }
   /wp-json/wp/v2/themes: {  }
   '/wp-json/wp/v2/themes/{stylesheet}': {  }

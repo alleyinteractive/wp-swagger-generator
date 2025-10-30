@@ -32,7 +32,7 @@ class Operation_Factory extends Factory {
 		}
 
 		$operation = new Operation( filter_out_nulls( [
-			'parameters'  => Parameter_Factory::make( $this->generator, $this->arguments ),
+			'parameters'  => ( new Parameter_Factory( $this->generator, $this->arguments ) )->generate(),
 			'requestBody' => Request_Body_Factory::make( $this->generator, $this->arguments ),
 			// 'responses' =>
 		] ) );
