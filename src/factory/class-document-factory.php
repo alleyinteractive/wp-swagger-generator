@@ -15,7 +15,7 @@ use RuntimeException;
 /**
  * Document Factory class.
  *
- * @extends Factory<\cebe\openapi\OpenApi, array{}>
+ * @extends Factory<\cebe\openapi\spec\OpenApi, array{}>
  */
 class Document_Factory extends Factory {
 	/**
@@ -40,7 +40,6 @@ class Document_Factory extends Factory {
 		] );
 
 		$document->paths = Paths_Factory::make( $this->generator, [ 'document' => $document ] );
-		// dd($document);
 
 		/**
 		 * Filter the OpenAPI document.
@@ -87,9 +86,17 @@ class Document_Factory extends Factory {
 		 * Filter the Swagger document information section.
 		 *
 		 * @link https://swagger.io/docs/specification/v3_0/api-general-info/
-		 * @param array<string, string|array<string, string>> $info Document information.
+		 *
+		 * @param array{
+		 *   title: string,
+		 *   description: string,
+		 *   version?: string,
+		 *   termsOfService?: string,
+		 *   contact?: array{name?: string, url?: string, email?: string},
+		 *   license?: array{name: string, url?: string}
+		 * } $info Document information.
 		 */
-		return new Info( apply_filters( 'wp_swagger_generator_document_info', $info ) );
+		return new Info( array_filter( apply_filters( 'wp_swagger_generator_document_info', $info ) ) );
 	}
 
 	/**
@@ -102,6 +109,7 @@ class Document_Factory extends Factory {
 		 * Filter the OpenAPI servers.
 		 *
 		 * @link https://swagger.io/docs/specification/v3_0/api-host-and-base-path/
+		 *
 		 * @param Server[] $servers OpenAPI servers.
 		 */
 		return (array) apply_filters( 'wp_swagger_generator_servers', [

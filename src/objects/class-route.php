@@ -7,6 +7,8 @@
 
 namespace Alley\WP\Swagger_Generator\Objects;
 
+use Alley\WP\Swagger_Generator\Http_Method;
+
 use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
 use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
 
@@ -59,5 +61,30 @@ readonly class Route {
 		}
 
 		return $this->sanitized_route;
+	}
+
+	/**
+	 * Determine if the route is a namespace root.
+	 */
+	public function is_namespace_root(): bool {
+		if ( 1 !== count( $this->handlers ) ) {
+			return false;
+		}
+
+		$handler = $this->handlers[0];
+		$methods = $handler->methods();
+
+		if ( 1 !== count( $methods ) || Http_Method::GET !== $methods[0] ) {
+			return false;
+		}
+
+		return (
+			is_array( $handler->callback )
+			&& is_array( $handler->callback )
+			&& isset( $handler->callback[0] )
+			&& $handler->callback[0] instanceof \WP_REST_Server
+			&& isset( $handler->callback[1] )
+			&& 'get_namespace_index' === $handler->callback[1]
+		);
 	}
 }

@@ -9,7 +9,6 @@ servers:
     description: 'REST API server'
 components: {  }
 paths:
-  /wp-json/wp/v2: {  }
   /wp-json/wp/v2/posts: {  }
   '/wp-json/wp/v2/posts/{id}': {  }
   '/wp-json/wp/v2/posts/{parent}/revisions': {  }

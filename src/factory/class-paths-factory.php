@@ -29,11 +29,19 @@ class Paths_Factory extends Factory {
 	 * @return Paths<\cebe\openapi\spec\PathItem>
 	 */
 	public function generate(): Paths {
-		$paths = [];
+		$paths  = [];
+		$prefix = rest_get_url_prefix();
 
-		dump($this->get_routes());
+		// dd($prefix);
+
+		// dd($this->get_routes());
 
 		foreach ( $this->get_routes() as $route ) {
+			// Skip namespace root routes as they don't provide meaningful information for an API spec.
+			if ( $route->is_namespace_root() ) {
+				continue;
+			}
+			// dd($route);
 			$sanitized_route = $route->sanitized_route();
 
 			// Skip if the route can't be sanitized for OpenAPI.
@@ -41,10 +49,10 @@ class Paths_Factory extends Factory {
 				continue;
 			}
 
-			$paths[ '/' . rest_get_url_prefix() . $sanitized_route ] = ( new Path_Item_Factory( $this->generator, array_merge(
-				$this->arguments,
-				[ 'route' => $route ],
-			) ) )->generate();
+			$paths[ "/{$prefix}{$sanitized_route}" ] = Path_Item_Factory::make(
+				$this->generator,
+				array_merge( $this->arguments, [ 'route' => $route ] ),
+			);
 		}
 
 		return new Paths( $paths );
