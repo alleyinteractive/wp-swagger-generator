@@ -7,6 +7,9 @@
 
 namespace Alley\WP\Swagger_Generator\Factory;
 
+use Alley\WP\Swagger_Generator\Http_Method;
+use Alley\WP\Swagger_Generator\Objects\Route;
+use Alley\WP\Swagger_Generator\Objects\Route_Handler;
 use cebe\openapi\spec\Operation;
 use RuntimeException;
 
@@ -18,7 +21,11 @@ use function Alley\WP\Swagger_Generator\filter_out_nulls;
  * @todo Request body
  * @todo Responses.
  *
- * @extends Factory<\cebe\openapi\Operation>
+ * @extends Factory<\cebe\openapi\Operation, array{
+ *   route: \Alley\WP\Swagger_Generator\Objects\Route,
+ *   handler: \Alley\WP\Swagger_Generator\Objects\Route_Handler,
+ *   method: \Alley\WP\Swagger_Generator\Http_Method
+ * }>
  */
 class Operation_Factory extends Factory {
 	/**
@@ -27,9 +34,13 @@ class Operation_Factory extends Factory {
 	 * @return Operation
 	 */
 	public function generate(): Operation {
-		if ( ! isset( $this->arguments['route'], $this->arguments['callback'], $this->arguments['method'] ) ) {
-			throw new RuntimeException( 'Expected arguments "route", "callback", and "method" arguments to be set.' );
-		}
+		$this->validate_arguments( [
+			'route'   => Route::class,
+			'handler' => Route_Handler::class,
+			'method'  => Http_Method::class,
+		] );
+
+		// dd($this->arguments);
 
 		$operation = new Operation( filter_out_nulls( [
 			'parameters'  => ( new Parameter_Factory( $this->generator, $this->arguments ) )->generate(),
@@ -40,10 +51,11 @@ class Operation_Factory extends Factory {
 		/**
 		 * Filter the OpenAPI operation.
 		 *
-		 * @param Operation $operation OpenAPI operation.
-		 * @param array     $arguments Arguments for the operation.
+		 * @param Operation            $operation OpenAPI operation.
+		 * @param array<string, mixed> $arguments Arguments for the operation.
+		 * @param string               $sanitized_route Sanitized route.
 		 */
-		$operation = apply_filters( 'wp_swagger_generator_operation', $operation, $this->arguments );
+		$operation = apply_filters( 'wp_swagger_generator_operation', $operation, $this->arguments, $this->arguments->route->sanitized_route );
 
 		if ( ! $operation instanceof Operation ) {
 			throw new RuntimeException( 'Operation must be an instance of ' . Operation::class );

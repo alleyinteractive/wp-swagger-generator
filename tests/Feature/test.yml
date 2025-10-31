@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: '3.1'
 info:
   title: 'Test Site'
   description: 'REST API documentation for WordPress.'

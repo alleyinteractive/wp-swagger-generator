@@ -51,7 +51,7 @@ class Paths_Factory extends Factory {
 
 			$paths[ "/{$prefix}{$sanitized_route}" ] = Path_Item_Factory::make(
 				$this->generator,
-				array_merge( $this->arguments, [ 'route' => $route ] ),
+				$this->forward_arguments( [ 'route' => $route ] ),
 			);
 		}
 

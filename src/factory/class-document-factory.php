@@ -33,7 +33,7 @@ class Document_Factory extends Factory {
 			 *
 			 * @param string $version OpenAPI version.
 			 */
-			'openapi'    => apply_filters( 'wp_swagger_generator_openapi_version', '3.0.3' ),
+			'openapi'    => apply_filters( 'wp_swagger_generator_openapi_version', Document::VERSION_3_1 ),
 			'info'       => $this->get_info(),
 			'servers'    => $this->get_servers(),
 			'components' => [],

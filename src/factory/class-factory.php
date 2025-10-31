@@ -39,6 +39,14 @@ abstract class Factory {
 	public function __construct( public readonly Generator $generator, public array $arguments = [] ) {}
 
 	/**
+	 * Generate the factory object(s).
+	 *
+	 * @return mixed
+	 * @phpstan-return TObject
+	 */
+	abstract function generate(): mixed;
+
+	/**
 	 * Validate that the expected arguments are set.
 	 *
 	 * @param string[] $expected Expected arguments.
@@ -66,10 +74,23 @@ abstract class Factory {
 	}
 
 	/**
-	 * Generate the factory object(s).
+	 * Forward existing arguments with new ones.
 	 *
-	 * @return mixed
-	 * @phpstan-return TObject
+	 * @param array<string, mixed> $arguments Arguments to forward.
+	 * @return array<string, mixed>
 	 */
-	abstract function generate(): mixed;
+	protected function forward_arguments( array $arguments ): array {
+		return array_merge( $this->arguments, $arguments );
+	}
+
+	/**
+	 * Call another factory with forwarded arguments.
+	 *
+	 * @param class-string<Factory> $factory_class Factory class to call.
+	 * @param array<string, mixed>  $arguments Arguments to forward.
+	 * @return mixed
+	 */
+	protected function call_factory( string $factory_class, array $arguments = [] ): mixed {
+		return $factory_class::make( $this->generator, $this->forward_arguments( $arguments ) );
+	}
 }
