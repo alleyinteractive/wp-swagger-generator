@@ -18,6 +18,7 @@
         "php": "^8.1",
         "alleyinteractive/composer-wordpress-autoloader": "^1.0",
         "devizzent/cebe-php-openapi": "^1.1",
+        "laravel/serializable-closure": "^2.0",
         "mantle-framework/support": "^1.2"
     },
     "require-dev": {
@@ -34,20 +35,16 @@
         "sort-packages": true
     },
     "autoload": {
+      "psr-4": {
+        "Alley\\WP\\SwaggerGenerator\\": "src/"
+      },
       "files": [
         "src/helpers.php"
       ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Alley\\WP\\Swagger_Generator\\Tests\\": "tests"
-        }
-    },
-    "extra": {
-        "wordpress-autoloader": {
-            "autoload": {
-                "Alley\\WP\\Swagger_Generator\\": "src"
-            }
+            "Alley\\WP\\SwaggerGenerator\\Tests\\": "tests"
         }
     },
     "minimum-stability": "dev",

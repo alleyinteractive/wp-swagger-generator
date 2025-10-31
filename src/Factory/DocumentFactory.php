@@ -1,11 +1,11 @@
 <?php
 /**
- * Document_Factory class file
+ * DocumentFactory class file
  *
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Factory;
+namespace Alley\WP\SwaggerGenerator\Factory;
 
 use cebe\openapi\spec\Info;
 use cebe\openapi\spec\OpenApi as Document;
@@ -17,7 +17,7 @@ use RuntimeException;
  *
  * @extends Factory<\cebe\openapi\spec\OpenApi, array{}>
  */
-class Document_Factory extends Factory {
+class DocumentFactory extends Factory {
 	/**
 	 * Generate the factory object(s).
 	 *
@@ -39,7 +39,7 @@ class Document_Factory extends Factory {
 			'components' => [],
 		] );
 
-		$document->paths = Paths_Factory::make( $this->generator, [ 'document' => $document ] );
+		$document->paths = PathsFactory::make( $this->generator, [ 'document' => $document ] );
 
 		/**
 		 * Filter the OpenAPI document.

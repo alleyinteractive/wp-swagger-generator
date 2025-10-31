@@ -4,9 +4,9 @@
  *
  * @package wp-swagger-generator
  */
-namespace Alley\WP\Swagger_Generator\Factory;
+namespace Alley\WP\SwaggerGenerator\Factory;
 
-use Alley\WP\Swagger_Generator\Generator;
+use Alley\WP\SwaggerGenerator\Generator;
 
 /**
  * Base Factory class.
@@ -49,7 +49,7 @@ abstract class Factory {
 	/**
 	 * Validate that the expected arguments are set.
 	 *
-	 * @param string[] $expected Expected arguments.
+	 * @param string[]|array<string, class-string> $expected Expected arguments.
 	 * @throws \InvalidArgumentException If an expected argument is not set.
 	 */
 	protected function validate_arguments( array $expected ): void {

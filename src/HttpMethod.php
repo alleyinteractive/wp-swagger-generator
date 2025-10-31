@@ -1,18 +1,18 @@
 <?php
 /**
- * Http_Method enum file
+ * HttpMethod enum file
  *
  * @package wp-swagger-generator
  */
 
 declare(strict_types=1);
 
-namespace Alley\WP\Swagger_Generator;
+namespace Alley\WP\SwaggerGenerator;
 
 /**
  * HTTP Methods enum.
  */
-enum Http_Method: string {
+enum HttpMethod: string {
 	case GET     = 'GET';
 	case POST    = 'POST';
 	case PUT     = 'PUT';

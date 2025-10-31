@@ -5,7 +5,7 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator;
+namespace Alley\WP\SwaggerGenerator;
 
 use cebe\openapi\spec\OpenApi as Document;
 use Mantle\Testing\Doubles\Spy_REST_Server;
@@ -60,7 +60,7 @@ class Generator {
 
 		$this->replace_rest_server();
 
-		$this->document = Factory\Document_Factory::make( $this );
+		$this->document = Factory\DocumentFactory::make( $this );
 
 		$this->restore_rest_server();
 	}

@@ -1,20 +1,20 @@
 <?php
 /**
- * Paths_Factory class file
+ * PathsFactory class file
  *
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Factory;
+namespace Alley\WP\SwaggerGenerator\Factory;
 
-use Alley\WP\Swagger_Generator\Objects\Route;
-use Alley\WP\Swagger_Generator\Objects\Route_Handler;
+use Alley\WP\SwaggerGenerator\Objects\Route;
+use Alley\WP\SwaggerGenerator\Objects\RouteHandler;
 use cebe\openapi\spec\Paths;
 use Mantle\Support\Arr;
 use RuntimeException;
 
-use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
-use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\sanitize_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\validate_route_for_openapi;
 use function Mantle\Support\Helpers\collect;
 
 /**
@@ -22,7 +22,7 @@ use function Mantle\Support\Helpers\collect;
  *
  * @extends Factory<\cebe\openapi\spec\Paths, array{document: \cebe\openapi\spec\OpenApi}>
  */
-class Paths_Factory extends Factory {
+class PathsFactory extends Factory {
 	/**
 	 * Generate the factory object(s).
 	 *
@@ -49,7 +49,7 @@ class Paths_Factory extends Factory {
 				continue;
 			}
 
-			$paths[ "/{$prefix}{$sanitized_route}" ] = Path_Item_Factory::make(
+			$paths[ "/{$prefix}{$sanitized_route}" ] = PathItemFactory::make(
 				$this->generator,
 				$this->forward_arguments( [ 'route' => $route ] ),
 			);
@@ -65,7 +65,7 @@ class Paths_Factory extends Factory {
 	 *
 	 * @throws RuntimeException If the REST server does not have the expected method or no routes are found.
 	 *
-	 * @return array<int, \Alley\WP\Swagger_Generator\Objects\Route>
+	 * @return array<int, \Alley\WP\SwaggerGenerator\Objects\Route>
 	 */
 	protected function get_routes(): array {
 		$server = rest_get_server();
@@ -91,6 +91,7 @@ class Paths_Factory extends Factory {
 			$routes = $routes->where( 'namespace', $this->generator->namespace );
 		}
 
+		// TODO: Break this into a Route Handler factory class.
 		return $routes->map( function ( array $arguments, string $route ): Route {
 			if ( isset( $arguments['callback'] ) ) {
 				$arguments = [ $arguments ];
@@ -114,10 +115,10 @@ class Paths_Factory extends Factory {
 					continue;
 				}
 
-				$handlers[] = new Route_Handler(
+				$handlers[] = new RouteHandler(
 					methods: Arr::wrap( $argument['methods'] ),
 					callback: $argument['callback'],
-					args: $argument['args'] ?? [],
+					arguments: $argument['args'] ?? [],
 				);
 			}
 

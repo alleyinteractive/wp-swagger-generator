@@ -5,14 +5,14 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Tests\Unit;
+namespace Alley\WP\SwaggerGenerator\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use function Alley\WP\Swagger_Generator\get_route_parameters;
-use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
-use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\get_route_parameters;
+use function Alley\WP\SwaggerGenerator\sanitize_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\validate_route_for_openapi;
 
 /**
  * Helpers test

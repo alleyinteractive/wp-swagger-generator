@@ -1,14 +1,14 @@
 <?php
 /**
- * Path_Item_Factory class file
+ * PathItemFactory class file
  *
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Factory;
+namespace Alley\WP\SwaggerGenerator\Factory;
 
-use Alley\WP\Swagger_Generator\Http_Method;
-use Alley\WP\Swagger_Generator\Objects\Route;
+use Alley\WP\SwaggerGenerator\HttpMethod;
+use Alley\WP\SwaggerGenerator\Objects\Route;
 use cebe\openapi\spec\PathItem;
 use InvalidArgumentException;
 
@@ -17,10 +17,10 @@ use InvalidArgumentException;
  *
  * @extends Factory<\cebe\openapi\spec\PathItem, array{
  *   document: \cebe\openapi\spec\OpenApi,
- *   route: \Alley\WP\Swagger_Generator\Objects\Route
+ *   route: \Alley\WP\SwaggerGenerator\Objects\Route
  * }>
  */
-class Path_Item_Factory extends Factory {
+class PathItemFactory extends Factory {
 	/**
 	 * Generate the factory object(s).
 	 *
@@ -38,7 +38,7 @@ class Path_Item_Factory extends Factory {
 			foreach ( $handler->methods() as $method ) {
 				// dd($handler);
 
-				$path->{strtolower( $method->value )} = Operation_Factory::make( $this->generator, $this->forward_arguments( [
+				$path->{strtolower( $method->value )} = OperationFactory::make( $this->generator, $this->forward_arguments( [
 					'handler' => $handler,
 					'method'  => $method,
 				] ) );

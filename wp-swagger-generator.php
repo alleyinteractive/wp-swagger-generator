@@ -15,7 +15,7 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator;
+namespace Alley\WP\SwaggerGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

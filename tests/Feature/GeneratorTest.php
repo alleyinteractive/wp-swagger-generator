@@ -5,15 +5,15 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Tests\Feature;
+namespace Alley\WP\SwaggerGenerator\Tests\Feature;
 
-use Alley\WP\Swagger_Generator\Generator;
-use Alley\WP\Swagger_Generator\Tests\TestCase;
+use Alley\WP\SwaggerGenerator\Generator;
+use Alley\WP\SwaggerGenerator\Tests\TestCase;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\Writer;
 
-use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
-use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\sanitize_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\validate_route_for_openapi;
 
 /**
  * Generator Test

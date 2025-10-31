@@ -1,11 +1,11 @@
 <?php
 /**
- * REST_Server class file
+ * RestServer class file
  *
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator;
+namespace Alley\WP\SwaggerGenerator;
 
 use WP_REST_Server;
 
@@ -14,7 +14,7 @@ use WP_REST_Server;
  *
  * @extends WP_REST_Server
  */
-class REST_Server extends WP_REST_Server {
+class RestServer extends WP_REST_Server {
 	/**
 	 * Gets the raw endpoints data from the server.
 	 *

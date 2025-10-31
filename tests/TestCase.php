@@ -5,7 +5,7 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Tests;
+namespace Alley\WP\SwaggerGenerator\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
 

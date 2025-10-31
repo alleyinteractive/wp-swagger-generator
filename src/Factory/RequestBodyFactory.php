@@ -1,19 +1,19 @@
 <?php
 /**
- * Parameter_Factory class file
+ * ParameterFactory class file
  *
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Factory;
+namespace Alley\WP\SwaggerGenerator\Factory;
 
 use cebe\openapi\spec\Parameter;
 use cebe\openapi\spec\RequestBody;
 use cebe\openapi\spec\Schema;
 use RuntimeException;
 
-use function Alley\WP\Swagger_Generator\filter_out_nulls;
-use function Alley\WP\Swagger_Generator\get_route_parameters;
+use function Alley\WP\SwaggerGenerator\filter_out_nulls;
+use function Alley\WP\SwaggerGenerator\get_route_parameters;
 use function Mantle\Support\Helpers\collect;
 
 /**
@@ -24,7 +24,7 @@ use function Mantle\Support\Helpers\collect;
  *
  * @extends Factory<\cebe\openapi\RequestBody>
  */
-class Request_Body_Factory extends Factory {
+class RequestBodyFactory extends Factory {
 	/**
 	 * Generate the factory object(s).
 	 *

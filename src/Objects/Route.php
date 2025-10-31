@@ -5,12 +5,12 @@
  * @package wp-swagger-generator
  */
 
-namespace Alley\WP\Swagger_Generator\Objects;
+namespace Alley\WP\SwaggerGenerator\Objects;
 
-use Alley\WP\Swagger_Generator\Http_Method;
+use Alley\WP\SwaggerGenerator\HttpMethod;
 
-use function Alley\WP\Swagger_Generator\sanitize_route_for_openapi;
-use function Alley\WP\Swagger_Generator\validate_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\sanitize_route_for_openapi;
+use function Alley\WP\SwaggerGenerator\validate_route_for_openapi;
 
 /**
  * Route Object.
@@ -27,7 +27,7 @@ readonly class Route {
 	 * Constructor.
 	 *
 	 * @param string               $route Raw route.
-	 * @param array<Route_Handler> $handlers Handlers.
+	 * @param array<RouteHandler> $handlers Handlers.
 	 * @param array<string, mixed> $options Options.
 	 */
 	public function __construct( public string $route, public array $handlers, public array $options ) {}
@@ -74,7 +74,7 @@ readonly class Route {
 		$handler = $this->handlers[0];
 		$methods = $handler->methods();
 
-		if ( 1 !== count( $methods ) || Http_Method::GET !== $methods[0] ) {
+		if ( 1 !== count( $methods ) || HttpMethod::GET !== $methods[0] ) {
 			return false;
 		}
 
