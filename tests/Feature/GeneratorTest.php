@@ -8,6 +8,7 @@
 namespace Alley\WP\SwaggerGenerator\Tests\Feature;
 
 use Alley\WP\SwaggerGenerator\Generator;
+use Alley\WP\SwaggerGenerator\Spec\Document;
 use Alley\WP\SwaggerGenerator\Tests\TestCase;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\Writer;
@@ -19,13 +20,18 @@ use function Alley\WP\SwaggerGenerator\validate_route_for_openapi;
  * Generator Test
  */
 class GeneratorTest extends TestCase {
-	public function test_it_can_generate_openapi_document() {
+	public function test_it_can_generate_swagger_documents() {
 		$generator = new Generator( 'wp/v2' );
 		$generator->compile();
 
 		$document = $generator->get_document();
 
+		$this->assertInstanceOf( Document::class, $document );
+
+		// dd($document);
+
 		file_put_contents( __DIR__ . '/test.yml', Writer::writeToYaml( $document ) );
+
 		dd(
 			// Dump the YML.
 			Writer::writeToYaml( $document ),

@@ -69,8 +69,6 @@ class ParameterFactory extends Factory {
 			throw new RuntimeException( 'Cannot generate parameters for an invalid route.' );
 		}
 
-		dump($handler->arguments);
-
 		if ( empty( $handler->arguments ) ) {
 			return [];
 		}
@@ -79,10 +77,11 @@ class ParameterFactory extends Factory {
 
 		$route_parameters = get_route_parameters( $sanitized_route );
 		$is_get_request   = $handler->supports_method( HttpMethod::GET );
-		dump('is_get_request', $is_get_request);
-		// $request_parameter_type = $ 'get' === $this->arguments['method'] ? 'query' : 'path';
 
 		foreach ( $this->arguments['handler']->arguments as $argument_name => $argument ) {
+			// if ('context' === $argument_name ) {
+			// 	dd($argument);
+			// }
 			$is_route_parameter = in_array( $argument_name, $route_parameters, true );
 			$is_query_parameter = $is_get_request && ! $is_route_parameter;
 
@@ -105,21 +104,64 @@ class ParameterFactory extends Factory {
 			$parameter = [
 				'name'        => $argument_name,
 				'description' => $argument['description'] ?? '',
-				'in'          => $is_route_parameter ? 'path' : ( $is_query_parameter ? 'query' : null ),
-				'type'        => $argument['type'] ?? 'string',
+				'in'          => match ( true ) {
+					$is_route_parameter => 'path',
+					! $is_get_request   => 'formData',
+					default             => 'query',
+				},
 				'required'    => match ( true ) {
 					$is_route_parameter => true,
 					! empty( $argument['required'] ) && (bool) $argument['required'] => (bool) $argument['required'],
 					default => null, // Null so it is omitted if not required.
 				},
-				'enum'        => $argument['enum'] ?? null,
+				'schema'      => $argument['schema'] ?? [],
 			];
 
-			dump(filter_out_nulls( $parameter ));
+			if ( ! is_array( $parameter['schema'] ) ) {
+				$parameter['schema'] = [];
+			}
+
+			if ( isset( $argument['default'] ) ) {
+				$parameter['schema']['default'] = $argument['default'];
+			}
+
+			$parameter['schema']['type'] = $parameter['schema']['type'] ?? ( $argument['type'] ?? 'string' );
+
+			// Handle enum string values.
+			if ( ! empty( $argument['enum'] ) && is_array( $argument['enum'] ) ) {
+				if ( empty( $argument['schema']['type'] ) || 'enum' === $argument['schema']['type'] ) {
+					$argument['schema']['type'] = 'string';
+				}
+
+				$argument['schema']['enum'] = $argument['enum'];
+			}
+
+			if ( isset( $argument['format'] ) && in_array( $argument['format'], [ 'date', 'date-time' ], true ) ) {
+				$parameter['schema']['format'] = $argument['format'];
+				$parameter['schema']['type']   = 'string';
+			}
+
+			if ( isset( $argument['oneOf'] ) || isset( $argument['anyOf'] ) ) {
+				$parameter['schema'] = filter_out_nulls( [
+					'oneOf' => $argument['oneOf'] ?? null,
+					'anyOf' => $argument['anyOf'] ?? null,
+				] );
+
+				unset( $parameter['type'], $parameter['enum'] );
+			}
+
+			// For array types, ensure items is set to a default.
+			if ( isset( $parameter['schema']['type'] ) && 'array' === $parameter['schema']['type'] && ! isset( $parameter['schema']['items'] ) ) {
+				$parameter['schema']['items'] = [
+					'type' => 'string',
+				];
+			}
+
 			$parameters[] = new Parameter( filter_out_nulls( $parameter ) );
 		}
 
-		dd('here');
+		return $parameters;
+
 		dd($parameters);
 
 		return collect( $this->arguments['handler']['arguments'] )->map( function ( array $argument, string $argument_name ) use ( $route_parameters ): ?Parameter {

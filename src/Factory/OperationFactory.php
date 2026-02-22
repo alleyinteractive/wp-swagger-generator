@@ -56,7 +56,7 @@ class OperationFactory extends Factory {
 		 * @param array<string, mixed> $arguments Arguments for the operation.
 		 * @param string               $sanitized_route Sanitized route.
 		 */
-		$operation = apply_filters( 'wp_swagger_generator_operation', $operation, $this->arguments, $this->arguments->route->sanitized_route() );
+		$operation = apply_filters( 'wp_swagger_generator_operation', $operation, $this->arguments, $this->arguments['route']->sanitized_route() );
 
 		if ( ! $operation instanceof Operation ) {
 			throw new RuntimeException( 'Operation must be an instance of ' . Operation::class );

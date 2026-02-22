@@ -7,15 +7,17 @@
 
 namespace Alley\WP\SwaggerGenerator\Factory;
 
+use Alley\WP\SwaggerGenerator\Spec\Document;
 use cebe\openapi\spec\Info;
-use cebe\openapi\spec\OpenApi as Document;
 use cebe\openapi\spec\Server;
 use RuntimeException;
 
 /**
  * Document Factory class.
  *
- * @extends Factory<\cebe\openapi\spec\OpenApi, array{}>
+ * @todo Add swagger and not openapi support.
+ *
+ * @extends Factory<Document, array{}>
  */
 class DocumentFactory extends Factory {
 	/**
@@ -33,7 +35,7 @@ class DocumentFactory extends Factory {
 			 *
 			 * @param string $version OpenAPI version.
 			 */
-			'openapi'    => apply_filters( 'wp_swagger_generator_openapi_version', Document::VERSION_3_1 ),
+			'openapi'    => apply_filters( 'wp_swagger_generator_openapi_version', '3.0.4' ),
 			'info'       => $this->get_info(),
 			'servers'    => $this->get_servers(),
 			'components' => [],
