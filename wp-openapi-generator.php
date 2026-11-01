@@ -8,7 +8,7 @@
  * Author URI: https://github.com/alleyinteractive/wp-openapi-generator
  * Requires at least: 6.5
  * Requires PHP: 8.1
- * Tested up to: 7.1
+ * Tested up to: 7.1.4
  * License: GPL-2.0-or-later
  *
  * Text Domain: wp-openapi-generator
